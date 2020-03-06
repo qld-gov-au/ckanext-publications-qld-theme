@@ -5,7 +5,7 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='''ckanext-data-qld-theme''',
+    name='''ckanext-publications-qld-theme''',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -16,7 +16,7 @@ setup(
     long_description='''''',
 
     # The project's main homepage.
-    url='https://github.com/qld-gov-au/ckanext-data-qld-theme',
+    url='https://github.com/qld-gov-au/ckanext-publications-qld-theme',
 
     # Author details
     author='''Salsa Digital''',
@@ -75,7 +75,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        data_qld_theme=ckanext.data_qld_theme.plugin:DataQldThemePlugin
+        data_qld_theme=ckanext.data_qld_theme.plugin:PublicationsQldThemePlugin
 
         [paste.paster_command]
         migrate_extras = ckanext.data_qld.commands:MigrateExtras

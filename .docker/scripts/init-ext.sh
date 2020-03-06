@@ -11,6 +11,6 @@ pip install -r "/app/requirements-dev.txt"
 python setup.py develop
 
 # Validate that the extension was installed correctly.
-if ! pip list | grep ckanext-data-qld-theme > /dev/null; then echo "Unable to find the extension in the list"; exit 1; fi
+if ! pip list | grep ckanext-publications-qld-theme > /dev/null; then echo "Unable to find the extension in the list"; exit 1; fi
 
 deactivate

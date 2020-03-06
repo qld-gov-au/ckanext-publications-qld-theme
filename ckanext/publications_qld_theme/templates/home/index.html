@@ -1,0 +1,72 @@
+{% extends "page.html" %}
+{% set homepage_style = ( g.homepage_style or '1' ) %}
+
+{% block subtitle %}{{ _("Welcome") }}{% endblock %}
+
+{% block maintag %}{% endblock %}
+{% block toolbar %}{% endblock %}
+
+{% block content %}
+
+<div id="content" class={{ h.set_background_image_class()  }}>
+    <h1 class="visuallyhidden">Queensland Government publications Homepage</h1>
+    <div class="hero-banner" style="background-image: url('https://www.qld.gov.au/__data/assets/image/0009/102204/qld-highway-ID-131896-6.jpg');">
+        <div class="hero-banner__inner container">
+            <div class="hero-banner__text-wrap">
+                <h1>Discover and use Queensland Government Publications</h1>
+            </div>
+            <div class="hero-banner__search">
+                <h2 class="hero-banner__search-title">Search over 1,850 publications and 11,735 resources</h2>
+                <form action="/dataset" method="get" autocomplete="off">
+                    <input type="text" name="q" placeholder="E.g Gazettes" aria-label="Search Publications" />
+                    <button type="submit"><span class="sr-only">Submit search</span></button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="container">
+        <div class="row wrapper"><article class="module"><div class="module-content">
+            <div class="tiles">
+
+                <div class="tiles__item tiles__item--bg-title">
+                    <div class="tiles__title">Top tags</div>
+                    <div class="tiles__content">
+                        <ul>
+                            <!-- noindex -->
+                            {% for tag_dict in h.random_tags()|sort(reverse=true,attribute='count') %}
+                                <li><a href="/tag/{{ tag_dict.name }}">{{ h.truncate( tag_dict.name, 20 ) }} <span>{{ tag_dict.count }}</span></a></li>
+                            {% endfor %}
+                            <!-- endnoindex -->
+                            <li><a title="More tags" href="/tag" class="">More&hellip;</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                {% if h.top_organisations() %}
+                <div class="tiles__item tiles__item--bg-title">
+                    <div class="tiles__title">Top publishers</div>
+                    <div class="tiles__content">
+                        <ul>
+                            <!-- noindex -->
+                            {% for group, num_packages in h.top_organisations(limit=5) %}
+                                {% if num_packages > 0 and (group.title or group.name) %}
+                                    <li>{{ h.link_to(group.title or group.name, h.url_for(controller='organization', action='read', id=group.name)) }} ({{ num_packages }})</li>
+                                {% endif %}
+                            {% endfor %}
+                            <!-- endnoindex -->
+                            <li><p class="more"><a title="Read more about: Top publishers" href="/organization">More&hellip;</a></p><p>&nbsp;</p></li>
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+
+
+            </div><!-- .tiles -->
+
+        </div></article></div>
+    </div><!-- .container -->
+</div>
+{% endblock %}

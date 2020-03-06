@@ -1,7 +1,7 @@
-# ckanext-data-qld-theme
+# ckanext-publications-qld-theme
 A custom CKAN extension for Data.Qld
 
-[![CircleCI](https://circleci.com/gh/qld-gov-au/ckanext-data-qld-theme/tree/develop.svg?style=shield)](https://circleci.com/gh/qld-gov-au/ckanext-data-qld-theme/tree/develop)
+[![CircleCI](https://circleci.com/gh/qld-gov-au/ckanext-publications-qld-theme/tree/develop.svg?style=shield)](https://circleci.com/gh/qld-gov-au/ckanext-publications-qld-theme/tree/develop)
 
 ## Local environment setup
 - Make sure that you have latest versions of all required software installed:
@@ -135,7 +135,7 @@ always_direct allow localnet
 
 * update /etc/hosts
 ```text
-127.0.0.1 docker.amazee.io adminer.docker.amazee.io mailhog.docker.amazee.io ckanext-data-qld-theme.docker.amazee.io
+127.0.0.1 docker.amazee.io adminer.docker.amazee.io mailhog.docker.amazee.io ckanext-publications-qld-theme.docker.amazee.io
 ```
 
 ## Available `ahoy` commands
