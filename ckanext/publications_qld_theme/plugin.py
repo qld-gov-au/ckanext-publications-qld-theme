@@ -49,7 +49,7 @@ def is_request_for_resource():
 def set_external_resources():
     environment = config.get('ckan.site_url', '')
     if 'ckan' in environment:
-        return '//staging.data.qld.gov.au'
+        return '//staging.publications.qld.gov.au'
     else:
         return ''
 
@@ -112,7 +112,7 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'templates')
         toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'data_qld_theme')
+        toolkit.add_resource('fanstatic', 'publications_qld_theme')
 
     # ITemplateHelpers
     def get_helpers(self):
