@@ -48,10 +48,10 @@ def is_request_for_resource():
 # this ensures external css/js is loaded from external staging if running in cicd/pdev environments.
 def set_external_resources():
     environment = config.get('ckan.site_url', '')
-    if 'ckan' in environment:
-        return '//staging.publications.qld.gov.au'
-    else:
+    if 'data.qld' in environment:
         return ''
+    else:
+        return '//www.data.qld.gov.au'
 
 
 def is_prod():
