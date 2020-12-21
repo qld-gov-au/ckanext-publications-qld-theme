@@ -9,10 +9,6 @@ Feature: Publications QLD Theme
               When I go to organisation page
               Then I should not see "Organization"
 
-       Scenario: Publications portal uses "Publication sets" instead of "Datasets"
-              When I go to dataset page
-              Then I should see "Publication sets"
-
        Scenario: Explore button does not exist on dataset detail page
               When I go to dataset page
               And I click the link with text that contains "A Wonderful Story"
