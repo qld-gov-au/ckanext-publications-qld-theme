@@ -12,7 +12,7 @@ setup(
     # http://packaging.python.org/en/latest/tutorial.html#version
     version='0.0.1',
 
-    description='''Custom extension for Data QLD''',
+    description='''Custom extension for Publications QLD''',
     long_description='''''',
 
     # The project's main homepage.
@@ -75,10 +75,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        data_qld_theme=ckanext.data_qld_theme.plugin:PublicationsQldThemePlugin
-
-        [paste.paster_command]
-        migrate_extras = ckanext.data_qld.commands:MigrateExtras
+        publications_qld_theme=ckanext.publications_qld_theme.plugin:PublicationsQldThemePlugin
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan

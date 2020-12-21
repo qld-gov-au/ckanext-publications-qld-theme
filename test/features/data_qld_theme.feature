@@ -1,11 +1,11 @@
-@data-qld-theme
-Feature: Data QLD Theme
+@publications-qld-theme
+Feature: Publications QLD Theme
 
        Scenario: Lato font is implemented on homepage
               When I go to homepage
               Then I should see an element with xpath "//link[contains(@href,'https://fonts.googleapis.com/css?family=Lato')]"
 
-       Scenario: Organisation is in fact spelled Organisation (as opposed to Organization) 
+       Scenario: Organisation is in fact spelled Organisation (as opposed to Organization)
               When I go to organisation page
               Then I should not see "Organization"
 

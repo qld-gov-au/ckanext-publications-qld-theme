@@ -1,5 +1,5 @@
 # ckanext-publications-qld-theme
-A custom CKAN extension for Data.Qld
+A custom CKAN extension for Publications.Qld
 
 [![CircleCI](https://circleci.com/gh/qld-gov-au/ckanext-publications-qld-theme/tree/develop.svg?style=shield)](https://circleci.com/gh/qld-gov-au/ckanext-publications-qld-theme/tree/develop)
 
@@ -55,7 +55,7 @@ A custom CKAN extension for Data.Qld
     brew install ahoy --HEAD
     ```
 - Make sure that all local web development services are shut down (Apache/Nginx, Mysql, MAMP etc).
-- Checkout project repository (in one of the [supported Docker directories](https://docs.docker.com/docker-for-mac/osxfs/#access-control)).  
+- Checkout project repository (in one of the [supported Docker directories](https://docs.docker.com/docker-for-mac/osxfs/#access-control)).
 - `pygmy up`
 - `ahoy build`
 
@@ -140,7 +140,7 @@ always_direct allow localnet
 
 ## Available `ahoy` commands
 Run each command as `ahoy <command>`.
-  ```  
+  ```
    build        Build or rebuild project.
    clean        Remove containers and all build files.
    cli          Start a shell inside CLI container or run a command.
@@ -162,7 +162,7 @@ Run each command as `ahoy <command>`.
   ```
 
 ## Coding standards
-Python code linting uses [flake8](https://github.com/PyCQA/flake8) with configuration captured in `.flake8` file.   
+Python code linting uses [flake8](https://github.com/PyCQA/flake8) with configuration captured in `.flake8` file.
 
 Set `ALLOW_LINT_FAIL=1` in `.env` to allow lint failures.
 
@@ -184,16 +184,16 @@ Custom steps described in `test/features/steps/steps.py`.
 Test scenarios located in `test/features/*.feature` files.
 
 Test environment configuration is located in `test/features/environment.py` and is setup to connect to a remote Chrome
-instance running in a separate Docker container. 
+instance running in a separate Docker container.
 
 During the test, Behaving passes connection information to [Splinter](https://github.com/cobrateam/splinter) which
-instantiates WebDriver object and establishes connection with Chrome instance. All further communications with Chrome 
+instantiates WebDriver object and establishes connection with Chrome instance. All further communications with Chrome
 are handled through this driver, but in a developer-friendly way.
 
 For a list of supported step-definitions, see https://github.com/ggozad/behaving#behavingweb-supported-matcherssteps.
 
 ## Automated builds (Continuous Integration)
-In software engineering, continuous integration (CI) is the practice of merging all developer working copies to a shared mainline several times a day. 
+In software engineering, continuous integration (CI) is the practice of merging all developer working copies to a shared mainline several times a day.
 Before feature changes can be merged into a shared mainline, a complete build must run and pass all tests on CI server.
 
 This project uses [Circle CI](https://circleci.com/) as a CI server: it imports production backups into fully built codebase and runs code linting and tests. When tests pass, a deployment process is triggered for nominated branches (usually, `master` and `develop`).
