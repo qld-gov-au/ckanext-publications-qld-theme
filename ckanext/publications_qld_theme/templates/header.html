@@ -78,7 +78,7 @@
         title="Link to Queensland Gov website"
       >
 
-      <img src="https://static.qgov.net.au/assets/v2/images/skin/qg-coa.svg" width="287" height="50" alt="Queensland Government">
+      <img src="https://www.data.qld.gov.au/__data/assets/file/0014/100832/qld-gov-open-data-logo.svg" width="287" height="50" alt="Queensland Government">
 
       </a>
       <div class="header__data-portal">
@@ -91,11 +91,18 @@
       <nav class="section navigation">
         <ul class="nav nav-pills">
           {% block header_site_navigation_tabs %}
-          <li {% if h.current_url() != '/' %}class="active"{% endif %}><a href="{{ h.url_for('search') }}">Publication</a></li>
-          <li>
-            <a href="/dataset/publishing-standards-publications-qld-gov-au">Standards</a>
+          {% if c.controller == 'package' and c.id == 'publishing-standards-publications-qld-gov-au' %}
+            {% set standards_active=True %}
+          {% elif c.controller in ['package', 'group'] and c.id.startswith('gazettes-') %}
+            {% set gazettes_active=True %}
+          {% elif h.current_url() != '/' %}
+            {% set publications_active=True %}
+          {% endif %}
+          <li {% if publications_active %}class="active"{% endif %}><a href="{{ h.url_for('search') }}">Publication</a></li>
+          <li {% if standards_active %}class="active"{% endif %}>
+            <a href="/dataset/publishing-standards-publications-qld-gov-au" >Standards</a>
           </li>
-          <li>
+          <li {% if gazettes_active %}class="active"{% endif %}>
             <a href="/gazettes-current">Gazettes</a>
           </li>
           <li>
