@@ -95,6 +95,8 @@
             {% set standards_active=True %}
           {% elif c.controller in ['package', 'group'] and c.id.startswith('gazettes-') %}
             {% set gazettes_active=True %}
+          {% elif c.controller == 'organization' %}
+            {% set organization_active=True %}
           {% elif h.current_url() != '/' %}
             {% set publications_active=True %}
           {% endif %}
@@ -102,13 +104,16 @@
           <li {% if standards_active %}class="active"{% endif %}>
             <a href="/dataset/publishing-standards-publications-qld-gov-au" >Standards</a>
           </li>
+          <li {% if organization_active %}class="active"{% endif %}>
+            <a href="/organization">Organisations</a>
+          </li>
           <li {% if gazettes_active %}class="active"{% endif %}>
             <a href="/gazettes-current">Gazettes</a>
           </li>
           <li>
             <a href="https://www.qld.gov.au/contact-us">Contact</a>
           </li>
-		  {% endblock %}
+          {% endblock %}
         </ul>
       </nav>
       {% endblock %} {% block header_site_search %}
