@@ -70,22 +70,6 @@
                     </div>
                 </div>
 
-                <div class="tiles__item tiles__item--bg-title">
-                    <div class="tiles__title">Top tags</div>
-                    <div class="tiles__content">
-                        <ul>
-                            <!-- noindex -->
-                            {% for tag_dict in h.random_tags()|sort(reverse=true,attribute='count') %}
-                                <li><a href="/tag/{{ tag_dict.name }}">{{ h.truncate( tag_dict.name, 20 ) }} <span>{{ tag_dict.count }}</span></a></li>
-                            {% endfor %}
-                            <!-- endnoindex -->
-                        </ul>
-                    </div>
-                    <div class="tiles__link">
-                        <a title="More tags" href="/tag" class="">More&hellip;</a>
-                    </div>
-                </div>
-
                 {% if h.top_organisations() %}
                 <div class="tiles__item tiles__item--bg-title">
                     <div class="tiles__title">Top publishers</div>
