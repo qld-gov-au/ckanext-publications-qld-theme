@@ -480,15 +480,15 @@ li.nav-item a span.badge {
 
 /* The background watermark image for each environment */
 body > div.qg-training {
-  background: url('/bg_training.png') left top repeat;
+  background: url('/assets/bg_training.png') left top repeat;
 }
 
 body > div.qg-dev {
-  background: url('/bg_dev.png') left top repeat;
+  background: url('/assets/bg_dev.png') left top repeat;
 }
 
 body > div.qg-staging {
-  background: url('/bg_staging.png') left top repeat;
+  background: url('/assets/bg_staging.png') left top repeat;
 }
 
 /* Overriding main.css to fix column not wrapping text in responsive tables */
