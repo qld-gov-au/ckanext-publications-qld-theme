@@ -54,7 +54,7 @@
 							{% set size = res.Size or res.size %}
 							{% set size = '({})'.format(size) if size else '' %}
 							{% set format = '({})'.format(res.format) if res.format else '' %}
-							<i class="fa fa-arrow-circle-o-down"></i> {{ _'Download {0}{1}'.format(size, format) }}
+							<i class="fa fa-arrow-circle-o-down"></i> {{ _('Download {0}{1}'.format(size, format)) }}
 							{% endif %}
 						</a>
 						{% block download_resource_button %}
