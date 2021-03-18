@@ -51,10 +51,10 @@
 							<i class="fa fa-external-link"></i> {{ _('Go to resource') }}
 							{% else %}
 							{% set res = c.resource %}
-							{% set size = '({})'.format(res.Size) if res.Size else '' %}
+							{% set size = res.Size or res.size %}
+							{% set size = '({})'.format(size) if size else '' %}
 							{% set format = '({})'.format(res.format) if res.format else '' %}
-							{% set download_text = 'Download {0}{1}'.format(size, format) %}
-							<i class="fa fa-arrow-circle-o-down"></i> {{ _(download_text) }}
+							<i class="fa fa-arrow-circle-o-down"></i> {{ _'Download {0}{1}'.format(size, format) }}
 							{% endif %}
 						</a>
 						{% block download_resource_button %}
