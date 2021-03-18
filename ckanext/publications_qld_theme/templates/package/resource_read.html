@@ -51,9 +51,9 @@
 							<i class="fa fa-external-link"></i> {{ _('Go to resource') }}
 							{% else %}
 							{% set res = c.resource %}
-							{% set size = res.Size %}
-							{% set format = res.format %}
-							{% set download_text = 'Download ({0})({1})'.format(size,format) %}
+							{% set size = '({})'.format(res.Size) if res.Size else '' %}
+							{% set format = '({})'.format(res.format) if res.format else '' %}
+							{% set download_text = 'Download {0}{1}'.format(size, format) %}
 							<i class="fa fa-arrow-circle-o-down"></i> {{ _(download_text) }}
 							{% endif %}
 						</a>
