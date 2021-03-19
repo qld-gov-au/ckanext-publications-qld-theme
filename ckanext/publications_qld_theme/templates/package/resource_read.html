@@ -50,11 +50,9 @@
 							{% elif (not res.has_views or not res.can_be_previewed) and not res.url_type == 'upload' %}
 							<i class="fa fa-external-link"></i> {{ _('Go to resource') }}
 							{% else %}
-							{% set res = c.resource %}
-							{% set size = res.Size or res.size %}
-							{% set size = '({})'.format(size) if size else '' %}
-							{% set format = '({})'.format(res.format) if res.format else '' %}
-							<i class="fa fa-arrow-circle-o-down"></i> {{ _('Download {0}{1}'.format(size, format)) }}
+							<i class="fa fa-arrow-circle-o-down"></i> {{ _('Download') }}
+								{% if res.actual_size or res.size %}({{ res.actual_size or  h.format_resource_filesize(res.size) }}){% endif %}
+								{% if res.format %}({{ res.format }}){% endif %}
 							{% endif %}
 						</a>
 						{% block download_resource_button %}
