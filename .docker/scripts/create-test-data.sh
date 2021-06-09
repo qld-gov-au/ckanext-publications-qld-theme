@@ -6,15 +6,14 @@
 set -e
 
 CKAN_ACTION_URL=http://ckan:3000/api/action
-CKAN_INI_FILE=/app/ckan/default/production.ini
 
-. /app/ckan/default/bin/activate
+. ${APP_DIR}/bin/activate
 
 ckan_cli () {
     if (which ckan > /dev/null); then
-        ckan -c ${CKAN_INI_FILE} "$@"
+        ckan -c ${CKAN_INI} "$@"
     else
-        paster --plugin=ckan "$@" -c ${CKAN_INI_FILE}
+        paster --plugin=ckan "$@" -c ${CKAN_INI}
     fi
 }
 
