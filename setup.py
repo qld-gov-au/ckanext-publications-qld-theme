@@ -19,8 +19,8 @@ setup(
     url='https://github.com/qld-gov-au/ckanext-publications-qld-theme',
 
     # Author details
-    author='''Salsa Digital''',
-    author_email='''''',
+    author='Salsa Digital',
+    author_email='',
 
     # Choose your license
     license='AGPL',
@@ -31,7 +31,7 @@ setup(
         # 3 - Alpha
         # 4 - Beta
         # 5 - Production/Stable
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
 
         # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
@@ -41,9 +41,8 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
 
-
     # What does your project relate to?
-    keywords='''CKAN''',
+    keywords='CKAN',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -61,8 +60,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     include_package_data=True,
-    package_data={
-    },
+    package_data={},
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages.
