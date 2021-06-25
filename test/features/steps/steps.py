@@ -11,7 +11,6 @@ def go_to_home(context):
 
 @step('I log in')
 def log_in(context):
-
     assert context.persona
     context.execute_steps(u"""
         When I go to homepage

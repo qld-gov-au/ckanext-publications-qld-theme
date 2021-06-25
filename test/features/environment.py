@@ -14,11 +14,16 @@ REMOTE_CHROME_URL = 'http://chrome:4444/wd/hub'
 
 # @see .docker/scripts/init.sh for credentials.
 PERSONAS = {
-    'Admin': dict(
-        name=u'admin',
-        email=u'admin@localhost',
-        password=u'Password123!'
-    )
+    'Admin': {
+        'name': u'admin',
+        'email': u'admin@localhost',
+        'password': u'Password123!'
+    },
+    'Unauthenticated': {
+        'name': u'',
+        'email': u'',
+        'password': u''
+    },
 }
 
 
