@@ -27,7 +27,8 @@ Feature: Dataset deletion
         Then I should see an element with xpath "//a[@data-module='confirm-action']"
         Then I press the element with xpath "//a[@data-module='confirm-action']"
         And I wait for 5 seconds
-        Then I should not see "Dataset deletion"
-        And I go to "/ckan-admin/trash"
-        Then I should see "Purge deleted datasets forever and irreversibly"
+        Then I should see "Dataset has been deleted"
+        And I should not see "Dataset deletion"
+        When I go to "/ckan-admin/trash"
+        Then I should see "Dataset deletion"
         Then I press the element with xpath "//button[@name='purge-packages']"

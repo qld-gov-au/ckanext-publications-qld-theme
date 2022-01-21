@@ -26,6 +26,27 @@ PERSONAS = {
         'email': u'',
         'password': u''
     },
+    # This user will not be assigned to any organisations
+    'CKANUser': {
+        'name': u'ckan_user',
+        'email': u'ckan_user@localhost',
+        'password': u'Password123!'
+    },
+    'TestOrgAdmin': {
+        'name': u'test_org_admin',
+        'email': u'test_org_admin@localhost',
+        'password': u'Password123!'
+    },
+    'TestOrgEditor': {
+        'name': u'test_org_editor',
+        'email': u'test_org_editor@localhost',
+        'password': u'Password123!'
+    },
+    'TestOrgMember': {
+        'name': u'test_org_member',
+        'email': u'test_org_member@localhost',
+        'password': u'Password123!'
+    }
 }
 
 
