@@ -27,6 +27,8 @@ Feature: Dataset deletion
         Then I should see an element with xpath "//a[@data-module='confirm-action']"
         Then I press the element with xpath "//a[@data-module='confirm-action']"
         And I wait for 5 seconds
+        And I press the element with xpath "//div[@class='modal-footer']//button[@class='btn btn-primary']"
+        And I wait for 5 seconds
         Then I should see "Dataset has been deleted"
         And I should not see "Dataset deletion"
         When I go to "/ckan-admin/trash"
