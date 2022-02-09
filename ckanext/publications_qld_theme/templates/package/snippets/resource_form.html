@@ -2,7 +2,7 @@
 
 {% block delete_button %}
   {% if data.id %}
-    {% if h.check_access('resource_delete', {'id': data.id}) and not h.data_qld_dataset_data_driven_application(data.package_id)  %}
+    {% if h.check_access('resource_delete', {'id': data.id})  %}
       <a class="btn btn-danger pull-left"
       {% if h.ckan_version() > '2.9' %}
         href="{% url_for dataset_type ~ '_resource.delete', resource_id=data.id, id=pkg_name %}"
