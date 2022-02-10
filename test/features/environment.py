@@ -26,6 +26,21 @@ PERSONAS = {
         'email': u'',
         'password': u''
     },
+    'TestOrgAdmin': {
+        'name': u'test_org_admin',
+        'email': u'test_org_admin@localhost',
+        'password': u'Password123!'
+    },
+    'TestOrgEditor': {
+        'name': u'test_org_editor',
+        'email': u'test_org_editor@localhost',
+        'password': u'Password123!'
+    },
+    'TestOrgMember': {
+        'name': u'test_org_member',
+        'email': u'test_org_member@localhost',
+        'password': u'Password123!'
+    },
 }
 
 
