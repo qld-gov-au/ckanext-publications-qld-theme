@@ -19,7 +19,7 @@ Feature: Dataset deletion
         Then I press the element with xpath "//button[@value='go-metadata']"
         And I wait for 10 seconds
         Then I should see "Data and Resources"
-        When I click the link with text "Manage"
+        When I click the link with href "/dataset/edit/dataset-deletion"
         Then I press the element with xpath "//a[string()='Delete' and @data-module='confirm-action']"
         Then I press the element with xpath "//div[@class='modal-footer']//button[@class='btn btn-primary']"
         And I wait for 10 seconds
