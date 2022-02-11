@@ -74,3 +74,22 @@ def edit_dataset(context, name):
 @step(u'I go to organisation page')
 def go_to_organisation_page(context):
     when_i_visit_url(context, '/organization')
+
+
+@step(u'I set persona var "{key}" to "{value}"')
+def set_persona_var(context, key, value):
+    context.persona[key] = value
+
+
+@step('I log in and go to admin config page')
+def log_in_go_to_admin_config(context):
+    assert context.persona
+    context.execute_steps(u"""
+        When I log in
+        And I go to admin config page
+    """)
+
+
+@step('I go to admin config page')
+def go_to_admin_config(context):
+    when_i_visit_url(context, '/ckan-admin/config')
