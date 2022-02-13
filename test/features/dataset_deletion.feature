@@ -1,7 +1,7 @@
 @dataset_deletion
 Feature: Dataset deletion
 
-    Scenario: Sysadmin creates a dataset
+    Scenario: Sysadmin creates and deletes a dataset
         Given "SysAdmin" as the persona
         When I log in
         And I go to "/dataset/new"
@@ -20,14 +20,10 @@ Feature: Dataset deletion
         And I wait for 10 seconds
         Then I should see "Data and Resources"
 
-    Scenario: Sysadmin deletes a dataset
-        Given "SysAdmin" as the persona
-        When I log in
-        And I go to "/dataset/edit/dataset-deletion"
-        Then I should see an element with xpath "//a[@data-module='confirm-action']"
-        Then I press the element with xpath "//a[@data-module='confirm-action']"
+        When I go to "/dataset/edit/dataset-deletion"
+        Then I press the element with xpath "//a[string()='Delete' and @data-module='confirm-action']"
         And I wait for 5 seconds
-        And I press the element with xpath "//div[@class='modal-footer']//button[@class='btn btn-primary']"
+        Then I press the element with xpath "//div[@class='modal-footer']//button[@class='btn btn-primary']"
         And I wait for 5 seconds
         Then I should see "Dataset has been deleted"
         And I should not see "Dataset deletion"
