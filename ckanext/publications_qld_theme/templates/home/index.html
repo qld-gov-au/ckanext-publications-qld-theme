@@ -1,5 +1,10 @@
 {% extends "page.html" %}
 {% set homepage_style = ( g.homepage_style or '1' ) %}
+{% if h.ckan_version() > '2.9' %}
+  {% set org_route_name = 'organization.read' %}
+{% else %}
+  {% set org_route_name = 'organization_read' %}
+{% endif %}
 
 {% block subtitle %}{{ _("Welcome") }}{% endblock %}
 
@@ -81,7 +86,7 @@
                             <!-- noindex -->
                             {% for group, num_packages in h.top_organisations(limit=5) %}
                                 {% if num_packages > 0 and (group.title or group.name) %}
-                                    <li>{{ h.link_to(group.title or group.name, h.url_for(controller='organization', action='read', id=group.name)) }} ({{ num_packages }})</li>
+                                    <li>{% link_for group.title or group.name, named_route=org_route_name, id=group.name %} ({{ num_packages }})</li>
                                 {% endif %}
                             {% endfor %}
                             <!-- endnoindex -->

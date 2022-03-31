@@ -59,9 +59,6 @@
 </div>
 {% endblock %}
 <header class="navbar navbar-static-top masthead">
-  {% block header_debug %} {% if g.debug and not g.debug_supress_header %}
-  <div class="debug">Controller : {{ c.controller }}<br/>Action : {{ c.action }}</div>
-  {% endif %} {% endblock %}
   <div class="container">
     <button
       data-target="#main-navigation-toggle"
@@ -91,11 +88,11 @@
       <nav class="section navigation">
         <ul class="nav nav-pills">
           {% block header_site_navigation_tabs %}
-          {% if c.controller == 'package' and c.id == 'publishing-standards-publications-qld-gov-au' %}
+          {% if h.current_url().startswith('/dataset/publishing-standards-publications-qld-gov-au') %}
             {% set standards_active=True %}
-          {% elif c.controller in ['package', 'group'] and c.id.startswith('gazettes-') %}
+          {% elif h.current_url().startswith('/dataset/gazettes-') or h.current_url().startswith('/group/gazettes-') %}
             {% set gazettes_active=True %}
-          {% elif c.controller == 'organization' %}
+          {% elif h.current_url().startswith('/organization') %}
             {% set organization_active=True %}
           {% elif h.current_url() != '/' %}
             {% set publications_active=True %}

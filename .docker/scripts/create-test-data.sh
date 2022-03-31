@@ -78,6 +78,17 @@ ckan_cli create-test-data hierarchy
 # Creating basic test data which has datasets with resources
 ckan_cli create-test-data basic
 
+add_user_if_needed organisation_admin "Organisation Admin" organisation_admin@localhost
+add_user_if_needed editor "Publisher" publisher@localhost
+add_user_if_needed foodie "Foodie" foodie@localhost
+add_user_if_needed group_admin "Group Admin" group_admin@localhost
+add_user_if_needed walker "Walker" walker@localhost
+
+# Create publishing standards dataset
+curl -LsH "Authorization: ${API_KEY}" \
+    --data "name=publishing-standards-publications-qld-gov-au&owner_org=${TEST_ORG_ID}" \
+    ${CKAN_ACTION_URL}/package_create
+
 # Datasets need to be assigned to an organisation
 
 echo "Assigning test Datasets to Organisation..."
