@@ -1,5 +1,4 @@
-@publications-qld-theme
-Feature: Publications QLD Theme
+Feature: Theme customisations
 
     Scenario: Lato font is implemented on homepage
         When I go to homepage
