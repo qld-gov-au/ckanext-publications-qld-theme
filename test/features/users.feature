@@ -47,7 +47,7 @@ Feature: User APIs
         Then I should see an element with xpath "//*[contains(string(), '"success": false,') and contains(string(), 'requires an authenticated user')]"
 
 
-    Scenario: User detail is accessible to admins
+    Scenario Outline: User detail is accessible to admins
         Given "<Admin>" as the persona
         When I log in
         And I go to the "admin" user API
