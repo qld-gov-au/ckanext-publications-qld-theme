@@ -2,15 +2,16 @@
 Feature: User APIs
 
     Scenario Outline: User autocomplete is accessible to admins
-        Given "<Admin>" as the persona
+        Given "<User>" as the persona
         When I log in
         And I search the autocomplete API for user "admin"
         Then I should see an element with xpath "//*[contains(string(), '"name": "admin"')]"
 
         Examples: Admins
-            | SysAdmin            |
-            | TestOrgAdmin        |
-            | Group Admin         |
+            | User          |
+            | SysAdmin      |
+            | TestOrgAdmin  |
+            | Group Admin   |
 
     Scenario: User autocomplete is not accessible to non-admins
         Given "Publisher" as the persona
@@ -26,15 +27,16 @@ Feature: User APIs
 
 
     Scenario Outline: User list is accessible to admins
-        Given "<Admin>" as the persona
+        Given "<User>" as the persona
         When I log in
         And I go to the user list API
         Then I should see an element with xpath "//*[contains(string(), '"success": true,') and contains(string(), '"name": "admin"')]"
 
         Examples: Admins
-            | SysAdmin            |
-            | TestOrgAdmin        |
-            | Group Admin         |
+            | User          |
+            | SysAdmin      |
+            | TestOrgAdmin  |
+            | Group Admin   |
 
     Scenario: User list is not accessible to non-admins
         Given "Publisher" as the persona
@@ -48,15 +50,16 @@ Feature: User APIs
 
 
     Scenario Outline: User detail is accessible to admins
-        Given "<Admin>" as the persona
+        Given "<User>" as the persona
         When I log in
         And I go to the "admin" user API
         Then I should see an element with xpath "//*[contains(string(), '"success": true,') and contains(string(), '"name": "admin"')]"
 
         Examples: Admins
-            | SysAdmin            |
-            | TestOrgAdmin        |
-            | Group Admin         |
+            | User          |
+            | SysAdmin      |
+            | TestOrgAdmin  |
+            | Group Admin   |
 
     Scenario: User detail for self is accessible to non-admins
         Given "Publisher" as the persona
@@ -76,15 +79,16 @@ Feature: User APIs
 
 
     Scenario Outline: User profile page is accessible to admins
-        Given "<Admin>" as the persona
+        Given "<User>" as the persona
         When I log in
         And I go to the "admin" profile page
         Then I should see an element with xpath "//h1[string() = 'Administrator']"
 
         Examples: Admins
-            | SysAdmin            |
-            | TestOrgAdmin        |
-            | Group Admin         |
+            | User          |
+            | SysAdmin      |
+            | TestOrgAdmin  |
+            | Group Admin   |
 
     Scenario: User profile page for self is accessible to non-admins
         Given "Publisher" as the persona

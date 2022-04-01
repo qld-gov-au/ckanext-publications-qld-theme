@@ -2,12 +2,13 @@
 Feature: Group APIs
 
     Scenario Outline: Group membership is accessible to admins of the group
-        Given "<Admin>" as the persona
+        Given "<User>" as the persona
         When I log in
         And I view the "silly-walks" group API "including" users
         Then I should see an element with xpath "//*[contains(string(), '"success": true,') and contains(string(), '"name": "group_admin"') and contains(string(), '"name": "walker"')]"
 
         Examples: Admins
+            | User        |
             | SysAdmin     |
             | Group Admin  |
 
@@ -17,7 +18,8 @@ Feature: Group APIs
         And I view the "silly-walks" group API "including" users
         Then I should see an element with xpath "//*[contains(string(), '"success": false,') and contains(string(), 'Authorization Error')]"
 
-        Examples: Users
+        Examples: Non-admin users
+            | User                |
             | Organisation Admin  |
             | Walker              |
 
