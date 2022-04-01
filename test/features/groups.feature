@@ -1,6 +1,10 @@
 @users
 Feature: Group APIs
 
+    Scenario: Group list is visible to anyone
+        When I go to "/group"
+        Then I should see "silly-walks"
+
     Scenario: Group membership is accessible to sysadmins
         Given "SysAdmin" as the persona
         When I log in

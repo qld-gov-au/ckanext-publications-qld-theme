@@ -1,6 +1,10 @@
 @users
 Feature: Organization APIs
 
+    Scenario: Organisation list is visible to anyone
+        When I go to "/organization"
+        Then I should see "Department of Health"
+
     Scenario: Organisation membership is accessible to sysadmins
         Given "SysAdmin" as the persona
         When I log in
