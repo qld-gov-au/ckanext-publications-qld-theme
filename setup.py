@@ -5,21 +5,21 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='''ckanext-publications-qld-theme''',
+    name='ckanext-publications-qld-theme',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # http://packaging.python.org/en/latest/tutorial.html#version
     version='0.0.1',
 
-    description='''Custom extension for Publications QLD''',
-    long_description='''''',
+    description='Custom extension for Publications QLD',
+    long_description='',
 
     # The project's main homepage.
     url='https://github.com/qld-gov-au/ckanext-publications-qld-theme',
 
     # Author details
-    author='Salsa Digital',
+    author='Queensland Government and Salsa Digital',
     author_email='',
 
     # Choose your license
@@ -47,7 +47,7 @@ setup(
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    # namespace_packages=['ckanext'],
+    namespace_packages=['ckanext'],
 
     install_requires=[
         # CKAN extensions should not list dependencies here, but in a separate
