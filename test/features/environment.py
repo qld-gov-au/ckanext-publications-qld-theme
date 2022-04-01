@@ -26,6 +26,31 @@ PERSONAS = {
         'email': u'',
         'password': u''
     },
+    'Organisation Admin': {
+        'name': u'organisation_admin',
+        'email': u'organisation_admin@localhost',
+        'password': u'Password123!'
+    },
+    'Group Admin': {
+        'name': u'group_admin',
+        'email': u'group_admin@localhost',
+        'password': u'Password123!'
+    },
+    'Publisher': {
+        'name': u'editor',
+        'email': u'publisher@localhost',
+        'password': u'Password123!'
+    },
+    'Walker': {
+        'name': u'walker',
+        'email': u'walker@localhost',
+        'password': u'Password123!'
+    },
+    'Foodie': {
+        'name': u'foodie',
+        'email': u'foodie@localhost',
+        'password': u'Password123!'
+    },
     # This user will not be assigned to any organisations
     'CKANUser': {
         'name': u'ckan_user',
@@ -46,7 +71,7 @@ PERSONAS = {
         'name': u'test_org_member',
         'email': u'test_org_member@localhost',
         'password': u'Password123!'
-    }
+    },
 }
 
 
@@ -55,6 +80,8 @@ def before_all(context):
     context.screenshots_dir = os.path.join(ROOT_PATH, 'test/screenshots')
     # The path where file attachments can be found.
     context.attachment_dir = os.path.join(ROOT_PATH, 'test/fixtures')
+    # The path where emails can be found.
+    context.mail_path = os.path.join(ROOT_PATH, 'test/emails')
 
     # Set base url for all relative links.
     context.base_url = BASE_URL
