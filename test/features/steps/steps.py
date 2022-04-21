@@ -3,7 +3,7 @@ from behaving.personas.steps import *  # noqa: F401, F403
 from behaving.mail.steps import *  # noqa: F401, F403
 from behaving.web.steps import *  # noqa: F401, F403
 from behaving.web.steps.url import when_i_visit_url
-import random
+import uuid
 
 
 @step(u'I get the current URL')
@@ -85,7 +85,7 @@ def title_random_text(context):
     assert context.persona
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
-    """.format(random.randrange(100000)))
+    """.format(uuid.uuid4()))
 
 
 @step(u'I go to dataset page')
