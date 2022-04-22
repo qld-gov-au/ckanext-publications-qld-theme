@@ -3,7 +3,7 @@ from behaving.personas.steps import *  # noqa: F401, F403
 from behaving.mail.steps import *  # noqa: F401, F403
 from behaving.web.steps import *  # noqa: F401, F403
 from behaving.web.steps.url import when_i_visit_url
-import random
+import uuid
 
 
 @step(u'I get the current URL')
@@ -74,6 +74,7 @@ def add_resource(context, name, url):
         And I execute the script "document.getElementById('field-image-url').value='{url}'"
         And I fill in "name" with "{name}"
         And I fill in "description" with "description"
+        And I execute the script "size_field = document.getElementById('field-size'); if (size_field) size_field.value = '1024';"
         And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
     """.format(name=name, url=url))
 
@@ -84,7 +85,7 @@ def title_random_text(context):
     assert context.persona
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
-    """.format(random.randrange(1000)))
+    """.format(uuid.uuid4()))
 
 
 @step(u'I go to dataset page')
@@ -178,7 +179,7 @@ def create_dataset_titled(context, title):
         And I fill in "name" with "Test Resource"
         And I select "HTML" from "format"
         And I fill in "description" with "Test Resource Description"
-        And I press "Finish"
+        And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
     """.format(title=title))
 
 
@@ -202,7 +203,7 @@ def create_dataset(context, license, file_format, file):
         And I fill in "name" with "Test Resource"
         And I execute the script "document.getElementById('field-format').value={file_format}"
         And I fill in "description" with "Test Resource Description"
-        And I press "Finish"
+        And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
     """.format(license=license, file=file, file_format=file_format))
 
 

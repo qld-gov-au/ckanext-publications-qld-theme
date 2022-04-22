@@ -1,10 +1,13 @@
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
-import datetime
+# encoding: utf-8
 
-from ckan.common import c, config, request
-import ckan.model as model
+import datetime
 import re
+
+from ckan import model, plugins
+from ckan.plugins import toolkit
+from ckan.common import c, config, request
+
+import blueprints
 
 
 def get_gtm_code():
@@ -140,6 +143,8 @@ def unreplied_comments_x_days(thread_url):
 class PublicationsQldThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.ITemplateHelpers)
+    if toolkit.check_ckan_version('2.9'):
+        plugins.implements(plugins.IBlueprint)
 
     # IConfigurer
 
@@ -166,3 +171,8 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
             'unreplied_comments_x_days': unreplied_comments_x_days,
             'is_reporting_enabled': is_reporting_enabled
         }
+
+    # IBlueprint
+
+    def get_blueprint(self):
+        return blueprints.blueprint
