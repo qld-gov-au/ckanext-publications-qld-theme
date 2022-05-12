@@ -1,0 +1,18 @@
+{% ckan_extends %}
+
+
+{% block meta %}
+{% set group_dict = group_dict or c.group_dict %}
+{{ super() }}
+<meta name="DCTERMS.title" content="{{ group_dict.display_name }}" />
+
+<meta name="DCTERMS.publisher" scheme="AGLSTERMS.AglsAgent" content="corporateName=The State of Queensland; jurisdiction=Queensland" />
+<meta name="DCTERMS.creator" scheme="AGLSTERMS.GOLD" content="c=AU; o=The State of Queensland; ou={{ group_dict.display_name }}" />
+<meta name="DCTERMS.created" content="{{ h.reformat_date_string(group_dict['created']) }}" />
+<meta name="DCTERMS.description" content="{{ group_dict.get('description') or group_dict.display_name | truncate(500) }}" />
+<meta name="DCTERMS.identifier" content="{{ group_dict['id'] }}" />
+<meta name="DCTERMS.jurisdiction" scheme="AGLSTERMS.AglsJuri" content="Queensland" />
+
+<meta name="DCTERMS.type" scheme="DCTERMS.DCMIType" content="Text" />
+<meta name="AGLSTERMS.documentType" scheme="AGLSTERMS.agls-document" content="guidelines" />
+{% endblock %}
