@@ -63,6 +63,18 @@ def is_request_for_resource():
     return False
 
 
+def reformat_date_string(date_string, new_format='%Y-%m-%d'):
+    """
+    Take an ISO-8601 representation of a date, and convert it
+    to the specified format.
+
+    Defaults to %Y-%m-%d, ie trimming a timestamp to a simple date.
+    """
+    if not date_string:
+        return ''
+    return datetime.datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S.%f').strftime(new_format)
+
+
 # this ensures external css/js is loaded from external staging
 # if running in cicd/pdev environments.
 def set_external_resources():
@@ -169,7 +181,8 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
                 get_comment_notification_recipients_enabled,
             'populate_revision': populate_revision,
             'unreplied_comments_x_days': unreplied_comments_x_days,
-            'is_reporting_enabled': is_reporting_enabled
+            'is_reporting_enabled': is_reporting_enabled,
+            'reformat_date_string': reformat_date_string,
         }
 
     # IBlueprint
