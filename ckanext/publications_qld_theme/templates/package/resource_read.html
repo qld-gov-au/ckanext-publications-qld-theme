@@ -4,7 +4,7 @@
 
 {% block meta %}
 {{ super() }}
-<meta name="DCTERMS.title" content="{{ res['name'] }}" />
+<meta name="DCTERMS.title" content="{{ h.resource_display_name(res) }}" />
 
 <meta name="DCTERMS.publisher" scheme="AGLSTERMS.AglsAgent" content="corporateName=The State of Queensland; jurisdiction=Queensland" />
 {% if pkg['organization'] and pkg['organization']['title'] %}
