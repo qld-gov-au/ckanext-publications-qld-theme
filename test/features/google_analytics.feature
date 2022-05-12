@@ -17,9 +17,9 @@ Feature: GoogleAnalytics
 
         When I click the link with text that contains "Dave's books"
         And I click the link with text that contains "About"
-        Then I should see an element with xpath "//meta[@name='DCTERMS.title' and @content='Dave's books']"
+        Then I should see an element with xpath "//meta[@name='DCTERMS.title' and contains(@content, 'Dave')]"
         And I should see an element with xpath "//meta[@name='DCTERMS.publisher' and @content='corporateName=The State of Queensland; jurisdiction=Queensland' and @scheme='AGLSTERMS.AglsAgent']"
-        And I should see an element with xpath "//meta[@name='DCTERMS.creator' and @content='c=AU; o=The State of Queensland; ou=Dave's books' and @scheme='AGLSTERMS.GOLD']"
+        And I should see an element with xpath "//meta[@name='DCTERMS.creator' and contains(@content, 'c=AU; o=The State of Queensland; ou=Dave') and @scheme='AGLSTERMS.GOLD']"
         And I should see an element with xpath "//meta[@name='DCTERMS.created' and @content != '' and @content != 'None']"
         And I should see an element with xpath "//meta[@name='DCTERMS.description' and @content='These are books that David likes.']"
         And I should see an element with xpath "//meta[@name='DCTERMS.identifier' and @content != '' and @content != 'None']"
