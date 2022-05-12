@@ -103,6 +103,11 @@ def edit_dataset(context, name):
     when_i_visit_url(context, '/dataset/edit/{}'.format(name))
 
 
+@step(u'I go to group page')
+def go_to_group_page(context):
+    when_i_visit_url(context, '/group')
+
+
 @step(u'I go to organisation page')
 def go_to_organisation_page(context):
     when_i_visit_url(context, '/organization')
