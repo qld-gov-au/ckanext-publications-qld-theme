@@ -7,7 +7,7 @@
 <meta name="DCTERMS.publisher" scheme="AGLSTERMS.AglsAgent" content="corporateName=The State of Queensland; jurisdiction=Queensland" />
 <meta name="DCTERMS.creator" scheme="AGLSTERMS.GOLD" content="c=AU; o=The State of Queensland; ou={{ group_dict.display_name }}" />
 <meta name="DCTERMS.created" content="{{ h.reformat_date_string(group_dict['created']) }}" />
-<meta name="DCTERMS.description" content="{{ group_dict['description'] or '' }}" />
+<meta name="DCTERMS.description" content="{{ group_dict.get('description', '') }}" />
 <meta name="DCTERMS.identifier" content="{{ group_dict['id'] }}" />
 <meta name="DCTERMS.jurisdiction" scheme="AGLSTERMS.AglsJuri" content="Queensland" />
 
