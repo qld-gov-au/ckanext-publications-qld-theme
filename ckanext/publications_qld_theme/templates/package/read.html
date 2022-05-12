@@ -12,7 +12,7 @@
 {% if pkg['metadata_modified'] %}
   <meta name="DCTERMS.modified" content="{{ h.reformat_date_string(pkg['metadata_modified']) }}" />
 {% endif %}
-<meta name="DCTERMS.description" content="{{ pkg['notes'] or pkg['title'] or pkg['name'] }}" />
+<meta name="DCTERMS.description" content="{{ (pkg['notes'] or pkg['title'] or pkg['name']) | truncate(500) }}" />
 <meta name="DCTERMS.identifier" content="{{ pkg['id'] }}" />
 <meta name="DCTERMS.jurisdiction" scheme="AGLSTERMS.AglsJuri" content="Queensland" />
 

@@ -13,7 +13,7 @@
 
 <meta name="DCTERMS.created" content="{{ h.reformat_date_string(res.created) }}" />
 <meta name="DCTERMS.modified" content="{{ h.reformat_date_string(res.metadata_modified or res.last_modified or res.created) or _('unknown') }}" />
-<meta name="DCTERMS.description" content="{{ res.description or res.name }}" />
+<meta name="DCTERMS.description" content="{{ (res.description or res.name) | truncate(500) }}" />
 <meta name="DCTERMS.identifier" content="{{ res.id }}" />
 <meta name="DCTERMS.jurisdiction" scheme="AGLSTERMS.AglsJuri" content="Queensland" />
 
