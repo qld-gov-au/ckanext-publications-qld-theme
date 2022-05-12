@@ -21,7 +21,7 @@ Feature: GoogleAnalytics
         Then I should see an element with xpath "//meta[@name='DCTERMS.description' and contains(@content, 'Some bolded text.')]"
         Then I should see an element with xpath "//meta[@name='DCTERMS.identifier']"
         Then I should see an element with xpath "//meta[@name='DCTERMS.jurisdiction' and @content='Queensland' and @scheme='AGLSTERMS.AglsJuri']"
-        Then I should see an element with xpath "//meta[@name='DCTERMS.type' and @content='text' and @scheme='DCTERMS.DCMIType']"
+        Then I should see an element with xpath "//meta[@name='DCTERMS.type' and @content='Text' and @scheme='DCTERMS.DCMIType']"
         Then I should see an element with xpath "//meta[@name='AGLSTERMS.documentType' and @content='index']"
 
     Scenario: When viewing the HTML source code of a resource, the appropriate metadata is visible
@@ -36,5 +36,5 @@ Feature: GoogleAnalytics
         Then I should see an element with xpath "//meta[@name='DCTERMS.description' and contains(@content, 'Full text. Needs escaping')]"
         Then I should see an element with xpath "//meta[@name='DCTERMS.identifier']"
         Then I should see an element with xpath "//meta[@name='DCTERMS.jurisdiction' and @content='Queensland' and @scheme='AGLSTERMS.AglsJuri']"
-        Then I should see an element with xpath "//meta[@name='DCTERMS.type' and @content='text' and @scheme='DCTERMS.DCMIType']"
+        Then I should see an element with xpath "//meta[@name='DCTERMS.type' and @content='Text' and @scheme='DCTERMS.DCMIType']"
         Then I should see an element with xpath "//meta[@name='AGLSTERMS.documentType' and @content='dataset']"
