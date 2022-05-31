@@ -213,6 +213,24 @@ def create_dataset(context, license, file_format, file):
     """.format(license=license, file=file, file_format=file_format))
 
 
+# The default behaving step does not convert base64 emails
+# Modified the default step to decode the payload from base64
+@step(u'I should receive a base64 email at "{address}" containing "{text}"')
+def should_receive_base64_email_containing_text(context, address, text):
+    def filter_contents(mail):
+        mail = email.message_from_string(mail)
+        payload = mail.get_payload()
+        payload += "=" * ((4 - len(payload) % 4) % 4)  # do fix the padding error issue
+        payload_bytes = quopri.decodestring(payload)
+        if len(payload_bytes) > 0:
+            payload_bytes += b'='  # do fix the padding error issue
+        decoded_payload = payload_bytes.decode('base64')
+        print('decoded_payload: ', decoded_payload)
+        return text in decoded_payload
+
+    assert context.mail.user_messages(address, filter_contents)
+
+
 @step(u'I log in and go to admin config page')
 def log_in_go_to_admin_config(context):
     assert context.persona
@@ -240,4 +258,3 @@ def lock_account(context):
     when_i_visit_url(context, "/user/login")
     for x in range(11):
         attempt_login(context, "incorrect password")
-
