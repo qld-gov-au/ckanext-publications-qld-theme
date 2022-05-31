@@ -3,6 +3,8 @@ from behaving.personas.steps import *  # noqa: F401, F403
 from behaving.mail.steps import *  # noqa: F401, F403
 from behaving.web.steps import *  # noqa: F401, F403
 from behaving.web.steps.url import when_i_visit_url
+import email
+import quopri
 import uuid
 
 
@@ -29,6 +31,7 @@ def log_in(context):
     assert context.persona
     context.execute_steps(u"""
         When I go to homepage
+        And I resize the browser to 1024x2048
         And I click the link with text that contains "Log in"
         And I log in directly
     """)
@@ -66,6 +69,24 @@ def login_link_visible(context):
     """)
 
 
+@step(u'I request a password reset')
+def request_reset(context):
+    assert context.persona
+    context.execute_steps(u"""
+        When I visit "/user/reset"
+        And I fill in "user" with "$name"
+        And I press the element with xpath "//button[contains(string(), 'Request Reset')]"
+        And I go to dataset page
+    """)
+
+
+@step(u'I fill in "{name}" with "{value}" if present')
+def fill_in_field_if_present(context, name, value):
+    context.execute_steps(u"""
+        When I execute the script "field = document.getElementById('field-{0}'); if (field) field.value = '{1}';"
+    """.format(name, value))
+
+
 @step(u'I create a resource with name "{name}" and URL "{url}"')
 def add_resource(context, name, url):
     context.execute_steps(u"""
@@ -74,7 +95,7 @@ def add_resource(context, name, url):
         And I execute the script "document.getElementById('field-image-url').value='{url}'"
         And I fill in "name" with "{name}"
         And I fill in "description" with "description"
-        And I execute the script "size_field = document.getElementById('field-size'); if (size_field) size_field.value = '1024';"
+        And I fill in "size" with "1024" if present
         And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
     """.format(name=name, url=url))
 
@@ -111,29 +132,6 @@ def go_to_group_page(context):
 @step(u'I go to organisation page')
 def go_to_organisation_page(context):
     when_i_visit_url(context, '/organization')
-
-
-@step(u'I set persona var "{key}" to "{value}"')
-def set_persona_var(context, key, value):
-    context.persona[key] = value
-
-
-@step(u'I lock my account')
-def lock_account(context):
-    when_i_visit_url(context, "/user/login")
-    for x in range(11):
-        attempt_login(context, "incorrect password")
-
-
-@step(u'I request a password reset')
-def request_reset(context):
-    assert context.persona
-    context.execute_steps(u"""
-        When I visit "/user/reset"
-        And I fill in "user" with "$name"
-        And I press the element with xpath "//button[contains(string(), 'Request Reset')]"
-        And I go to dataset page
-    """)
 
 
 @step(u'I search the autocomplete API for user "{username}"')
@@ -179,11 +177,13 @@ def create_dataset_titled(context, title):
         And I fill in "notes" with "Description"
         And I fill in "version" with "1.0"
         And I fill in "author_email" with "test@me.com"
+        And I fill in "de_identified_data" with "NO" if present
         And I press "Add Data"
         And I execute the script "document.getElementById('field-image-url').value='https://example.com'"
         And I fill in "name" with "Test Resource"
         And I select "HTML" from "format"
         And I fill in "description" with "Test Resource Description"
+        And I fill in "size" with "1024" if present
         And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
     """.format(title=title))
 
@@ -203,6 +203,7 @@ def create_dataset(context, license, file_format, file):
         And I fill in "version" with "1.0"
         And I fill in "author_email" with "test@me.com"
         And I execute the script "document.getElementById('field-license_id').value={license}"
+        Then I fill in "de_identified_data" with "NO" if present
         And I press "Add Data"
         And I attach the file {file} to "upload"
         And I fill in "name" with "Test Resource"
@@ -224,3 +225,19 @@ def log_in_go_to_admin_config(context):
 @step(u'I go to admin config page')
 def go_to_admin_config(context):
     when_i_visit_url(context, '/ckan-admin/config')
+
+
+@step(u'I log out')
+def log_out(context):
+    when_i_visit_url(context, '/user/logout')
+
+
+# ckanext-qgov
+
+
+@step(u'I lock my account')
+def lock_account(context):
+    when_i_visit_url(context, "/user/login")
+    for x in range(11):
+        attempt_login(context, "incorrect password")
+
