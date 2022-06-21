@@ -33,12 +33,14 @@ Feature: Login Redirection
         Then I should see an element with xpath "//span[contains(string(), 'Private')]"
 
     @private_dataset
+    @unauthenticated
     Scenario: As an unauthenticated user, when I visit the URL of a private dataset I see the login page
         Given "Unauthenticated" as the persona
         When I visit "/dataset/annakarenina"
         Then I should see a login link
 
     @public_dataset
+    @unauthenticated
     Scenario: As an unauthenticated user, when I visit the URL of a public dataset I see the dataset without needing to login
         Given "Unauthenticated" as the persona
         When I visit "/dataset/warandpeace"
