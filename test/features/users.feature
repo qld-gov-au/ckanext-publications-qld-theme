@@ -75,8 +75,7 @@ Feature: User APIs
 
     Scenario: User detail is not accessible anonymously
         When I go to the "editor" user API
-        Then I should see an element with xpath "//*[contains(string(), '"success": false,') and contains(string(), 'requires an authenticated user')]"
-
+        Then I should see an element with xpath "//*[contains(string(), '"success": false,') and contains(string(), 'Authorization Error')]"
 
     Scenario Outline: User profile page is accessible to admins
         Given "<Persona>" as the persona
