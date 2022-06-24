@@ -91,7 +91,7 @@ def fill_in_field_if_present(context, name, value):
 def add_resource(context, name, url):
     context.execute_steps(u"""
         When I log in
-        And I visit "/dataset/new_resource/warandpeace"
+        And I visit "/dataset/new_resource/test-dataset"
         And I execute the script "document.getElementById('field-image-url').value='{url}'"
         And I fill in "name" with "{name}"
         And I fill in "description" with "description"
@@ -102,7 +102,6 @@ def add_resource(context, name, url):
 
 @step(u'I fill in title with random text')
 def title_random_text(context):
-
     assert context.persona
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
