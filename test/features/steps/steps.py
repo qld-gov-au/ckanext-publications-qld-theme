@@ -91,7 +91,7 @@ def fill_in_field_if_present(context, name, value):
 def add_resource(context, name, url):
     context.execute_steps(u"""
         When I log in
-        And I visit "/dataset/new_resource/warandpeace"
+        And I visit "/dataset/new_resource/test-dataset"
         And I execute the script "document.getElementById('field-image-url').value='{url}'"
         And I fill in "name" with "{name}"
         And I fill in "description" with "description"
@@ -102,7 +102,6 @@ def add_resource(context, name, url):
 
 @step(u'I fill in title with random text')
 def title_random_text(context):
-
     assert context.persona
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
@@ -213,10 +212,15 @@ def create_dataset(context, license, file_format, file):
     """.format(license=license, file=file, file_format=file_format))
 
 
-# The default behaving step does not convert base64 emails
-# Modified the default step to decode the payload from base64
 @step(u'I should receive a base64 email at "{address}" containing "{text}"')
 def should_receive_base64_email_containing_text(context, address, text):
+    should_receive_base64_email_containing_texts(context, address, text, None)
+
+
+@step(u'I should receive a base64 email at "{address}" containing both "{text}" and "{text2}"')
+def should_receive_base64_email_containing_texts(context, address, text, text2):
+    # The default behaving step does not convert base64 emails
+    # Modified the default step to decode the payload from base64
     def filter_contents(mail):
         mail = email.message_from_string(mail)
         payload = mail.get_payload()
@@ -226,7 +230,7 @@ def should_receive_base64_email_containing_text(context, address, text):
             payload_bytes += b'='  # do fix the padding error issue
         decoded_payload = payload_bytes.decode('base64')
         print('decoded_payload: ', decoded_payload)
-        return text in decoded_payload
+        return text in decoded_payload and (not text2 or text2 in decoded_payload)
 
     assert context.mail.user_messages(address, filter_contents)
 
