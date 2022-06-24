@@ -102,7 +102,6 @@ def add_resource(context, name, url):
 
 @step(u'I fill in title with random text')
 def title_random_text(context):
-
     assert context.persona
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
