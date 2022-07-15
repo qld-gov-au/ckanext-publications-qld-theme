@@ -17,7 +17,7 @@ jobs:
           - ckan-version: ckan-2.8.8-qgov.5
             python-version: py3
 
-    name: Continuous Integration build on CKAN ${{ matrix.ckan-version }}
+    name: Continuous Integration build on CKAN ${{ matrix.ckan-version }} ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     container: integratedexperts/ci-builder
     env:

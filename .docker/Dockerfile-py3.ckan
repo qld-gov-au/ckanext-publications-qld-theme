@@ -18,8 +18,10 @@ RUN apk add --no-cache curl build-base \
 
 # Install CKAN.
 
-RUN . ${VENV_DIR}/bin/activate \
-    && pip install setuptools==36.1 \
+RUN mkdir -p ${VENV_DIR} \
+    && virtualenv ${VENV_DIR} \
+    && . ${VENV_DIR}/bin/activate \
+    && pip install setuptools \
     && pip install -e "git+https://github.com/${CKAN_REPO}.git@${CKAN_VERSION}#egg=ckan" \
     && pip install -r "${VENV_DIR}/src/ckan/requirements.txt" \
     && ln -s "${VENV_DIR}/src/ckan/who.ini" "${VENV_DIR}/who.ini" \
