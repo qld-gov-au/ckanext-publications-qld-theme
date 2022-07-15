@@ -1,4 +1,4 @@
-FROM amazeeio/python:3.10-22.7.0
+FROM amazeeio/python:3.8-22.7.0
 
 ARG SITE_URL=http://ckan:3000/
 ARG CKAN_REPO=qld-gov-au/ckan
