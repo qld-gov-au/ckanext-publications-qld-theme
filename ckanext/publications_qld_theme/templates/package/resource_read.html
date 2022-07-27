@@ -118,7 +118,8 @@
     <h1 class="page-heading">{{ h.resource_display_name(res)}}
     {% if res.schema %}
         {{ h.get_validation_badge(res)|safe }}
-        {% resource 'ckanext-validation/main' %}
+        {% set type = 'asset' if h.is_ckan_29() else 'resource' %}
+        {% include 'snippets/validation_main_' ~ type ~ '.html' %}
     {% endif %}
     </h1>
 {% endblock %}
