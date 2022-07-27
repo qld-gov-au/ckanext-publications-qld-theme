@@ -116,7 +116,7 @@ def latest_revision(resource_id):
 
 def populate_revision(resource):
     if 'revision_timestamp' in resource \
-            or check_ckan_version(min_version='2.9'):
+            or is_ckan_29():
         return
     current_revision = latest_revision(resource['id'])
     if current_revision is not None:
@@ -140,10 +140,18 @@ def unreplied_comments_x_days(thread_url):
     return comment_ids
 
 
+def is_ckan_29():
+    """
+    Returns True if using CKAN 2.9+, with Flask and Webassets.
+    Returns False if those are not present.
+    """
+    return check_ckan_version(min_version='2.9.0')
+
+
 class PublicationsQldThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.ITemplateHelpers)
-    if check_ckan_version('2.9'):
+    if is_ckan_29():
         plugins.implements(plugins.IBlueprint)
 
     # IConfigurer
@@ -151,7 +159,7 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
     def update_config(self, config_):
         add_template_directory(config_, 'templates')
         add_public_directory(config_, 'public')
-        add_resource('fanstatic', 'publications_qld_theme')
+        add_resource('assets', 'publications_qld_theme')
 
     # ITemplateHelpers
     def get_helpers(self):
@@ -170,6 +178,7 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
             'populate_revision': populate_revision,
             'unreplied_comments_x_days': unreplied_comments_x_days,
             'is_reporting_enabled': is_reporting_enabled,
+            'is_ckan_29': is_ckan_29,
         }
 
     # IBlueprint
