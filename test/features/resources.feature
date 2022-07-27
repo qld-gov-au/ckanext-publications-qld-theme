@@ -15,3 +15,8 @@ Feature: Resource UI
         | Domain ending with numbers | http://example.com.1.2.3.4 |
         | Domain ending with private | http://example.com.private |
 
+    Scenario: Link resource with missing or invalid protocol should use HTTP
+        Given "SysAdmin" as the persona
+        When I create a resource with name "Non-HTTP link" and URL "git+https://github.com/ckan/ckan.git"
+        And I press the element with xpath "//a[contains(@title, 'Non-HTTP link') and contains(string(), 'Non-HTTP link')]"
+        And I should see "http://git+https://github.com/ckan/ckan.git"
