@@ -4,10 +4,10 @@ import datetime
 import re
 
 from ckan import model, plugins
-from ckan.plugins import toolkit
-from ckan.common import c, config, request
+from ckan.plugins.toolkit import add_resource, add_public_directory, \
+    add_template_directory, c, config, check_ckan_version, get_action, request
 
-import blueprints
+from . import blueprints
 
 
 def get_gtm_code():
@@ -30,7 +30,7 @@ def is_datarequests_enabled():
 
 
 def get_all_groups():
-    groups = toolkit.get_action('group_list')(
+    groups = get_action('group_list')(
         data_dict={'include_dataset_count': False, 'all_fields': True})
     pkg_group_ids = set(group['id'] for group
                         in c.pkg_dict.get('groups', []))
@@ -116,7 +116,7 @@ def latest_revision(resource_id):
 
 def populate_revision(resource):
     if 'revision_timestamp' in resource \
-            or toolkit.check_ckan_version(min_version='2.9'):
+            or is_ckan_29():
         return
     current_revision = latest_revision(resource['id'])
     if current_revision is not None:
@@ -131,7 +131,7 @@ def unreplied_comments_x_days(thread_url):
     comment_ids = []
 
     if 'data_qld_reporting' in config.get('ckan.plugins', False):
-        unreplied_comments = toolkit.get_action(
+        unreplied_comments = get_action(
             'comments_no_replies_after_x_days'
         )({}, {'thread_url': thread_url})
 
@@ -140,18 +140,26 @@ def unreplied_comments_x_days(thread_url):
     return comment_ids
 
 
+def is_ckan_29():
+    """
+    Returns True if using CKAN 2.9+, with Flask and Webassets.
+    Returns False if those are not present.
+    """
+    return check_ckan_version(min_version='2.9.0')
+
+
 class PublicationsQldThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.ITemplateHelpers)
-    if toolkit.check_ckan_version('2.9'):
+    if is_ckan_29():
         plugins.implements(plugins.IBlueprint)
 
     # IConfigurer
 
     def update_config(self, config_):
-        toolkit.add_template_directory(config_, 'templates')
-        toolkit.add_public_directory(config_, 'public')
-        toolkit.add_resource('fanstatic', 'publications_qld_theme')
+        add_template_directory(config_, 'templates')
+        add_public_directory(config_, 'public')
+        add_resource('assets', 'publications_qld_theme')
 
     # ITemplateHelpers
     def get_helpers(self):
@@ -170,6 +178,7 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
             'populate_revision': populate_revision,
             'unreplied_comments_x_days': unreplied_comments_x_days,
             'is_reporting_enabled': is_reporting_enabled,
+            'is_ckan_29': is_ckan_29,
         }
 
     # IBlueprint
