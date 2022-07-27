@@ -2,7 +2,8 @@ FROM amazeeio/python:3.8-22.7.0
 
 ARG SITE_URL=http://ckan:3000/
 ARG CKAN_REPO=qld-gov-au/ckan
-ARG CKAN_VERSION=ckan-2.8.8-qgov.5
+ARG CKAN_VERSION=ckan-2.9.5-qgov.8
+ENV PYTHON_VERSION=py3
 ENV SITE_URL="${SITE_URL}"
 ENV VENV_DIR=/app/ckan/default
 ENV APP_DIR=/app
@@ -11,7 +12,7 @@ ENV CKAN_INI=/app/ckan/default/production.ini
 WORKDIR "${APP_DIR}"
 
 ENV DOCKERIZE_VERSION v0.6.1
-RUN apk add --no-cache curl build-base git libxml2-dev libxslt-dev postgresql postgresql-dev \
+RUN apk add --no-cache curl build-base git libxml2-dev libxslt-dev postgresql postgresql-client postgresql-dev \
     && curl -sLO https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
     && rm dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz
@@ -31,7 +32,6 @@ RUN mkdir -p ${VENV_DIR} \
 
 COPY .docker/test.ini $CKAN_INI
 
-# Add current extension and files.
 COPY . ${APP_DIR}/
 
 COPY .docker/scripts ${APP_DIR}/scripts
