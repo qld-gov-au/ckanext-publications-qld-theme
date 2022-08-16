@@ -127,7 +127,7 @@ commands:
     usage: Run BDD tests.
     cmd: |
       ahoy start-mailmock &
-      if (echo "$CKAN_VERSION" | grep '^ckan-2.8'); then
+      if [ "$CKAN_VERSION" = "2.8" ]; then
         BEHAVE_TAGS="--tags=-ckan29"
       fi
       sleep 5 &&
