@@ -19,10 +19,10 @@ Example:
     </thead>
     <tbody>
     {% block group_list_inner %}
-  {% for group in groups %}
-    {% snippet "group/snippets/group_item.html", group=group, position=loop.index %}
-  {% endfor %}
-  {% endblock %}
+        {% for group in groups %}
+            {% snippet "group/snippets/group_item.html", group=group, position=loop.index %}
+        {% endfor %}
+    {% endblock %}
     </tbody>
   </table>
 </div>
