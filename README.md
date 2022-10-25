@@ -1,7 +1,23 @@
 # ckanext-publications-qld-theme
+
 A custom CKAN extension for Publications.Qld
 
 [![CircleCI](https://circleci.com/gh/qld-gov-au/ckanext-publications-qld-theme/tree/develop.svg?style=shield)](https://circleci.com/gh/qld-gov-au/ckanext-publications-qld-theme/tree/develop)
+
+## Requirements
+
+This theme was written to work with python 2 and CKAN 2.8.x. Qld Gov has now migrated to 2.9.x py2 and by end of 2022 will be on 2.9.x+ py3.
+
+Compatibility with core CKAN versions:
+
+| CKAN version    | Compatible?     |
+|-----------------|-----------------|
+| 2.6 and earlier | no              |
+| 2.7             | no              |
+| 2.8             | testing dropped |
+| 2.9.5+ py2      | yes             |
+| 2.9.5+ py3      | yes             |
+
 
 ## Local environment setup
 - Make sure that you have latest versions of all required software installed:
