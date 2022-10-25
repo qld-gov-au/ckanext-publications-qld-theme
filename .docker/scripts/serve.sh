@@ -15,7 +15,7 @@ done
 
 . ${APP_DIR}/scripts/activate
 if (which ckan > /dev/null); then
-    ckan -c ${CKAN_INI} run --disable-reloader  --threaded --processes 4
+    ckan -c ${CKAN_INI} run --disable-reloader  --threaded
 else
     paster serve ${CKAN_INI}
 fi
