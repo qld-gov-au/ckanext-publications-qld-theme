@@ -59,9 +59,9 @@
 </div>
 {% endblock %}
 <header class="navbar navbar-static-top masthead">
-  {% block header_debug %}
-    {{ super() }}
-  {% endblock %}
+  {% block header_debug %} {% if g.debug and not g.debug_supress_header %}
+  <div class="debug">Controller : {{ c.controller }}<br/>Action : {{ c.action }}</div>
+  {% endif %} {% endblock %}
   <div class="container">
     <button
       data-target="#main-navigation-toggle"
@@ -82,7 +82,7 @@
         <img src="https://www.data.qld.gov.au/__data/assets/file/0028/218791/qg-coa-stacked.svg" alt="Queensland Government" class="hidden-xs hidden-sm hidden-md hidden-lg qg-print-coat-of-arms">
       </a>
       <div class="header__data-portal">
-        <a href="/">Publications portal</a>
+        <a href="/">Open Data Portal</a>
       </div>
     </hgroup>
 
@@ -91,30 +91,18 @@
       <nav class="section navigation">
         <ul class="nav nav-pills">
           {% block header_site_navigation_tabs %}
-          {% if h.current_url().startswith('/dataset/publishing-standards-publications-qld-gov-au') %}
-            {% set standards_active=True %}
-          {% elif h.current_url().startswith('/dataset/gazettes-') or h.current_url().startswith('/group/gazettes-') %}
-            {% set gazettes_active=True %}
-          {% elif h.current_url().startswith('/organization') %}
-            {% set organization_active=True %}
-          {% elif h.current_url() != '/' %}
-            {% set publications_active=True %}
-          {% endif %}
-          {% set dataset_search_route = 'dataset.search' if h.is_ckan_29() else 'search' %}
-          <li {% if publications_active %}class="active"{% endif %}><a href="{{ h.url_for(dataset_search_route) }}">Publication</a></li>
-          <li {% if standards_active %}class="active"{% endif %}>
-            <a href="/dataset/publishing-standards-publications-qld-gov-au" >Standards</a>
-          </li>
-          <li {% if organization_active %}class="active"{% endif %}>
-            <a href="/organization">Organisations</a>
-          </li>
-          <li {% if gazettes_active %}class="active"{% endif %}>
-            <a href="/gazettes-current">Gazettes</a>
+          <li {% if h.current_url() != '/' %}class="active"{% endif %}><a href="{{ h.url_for('search') }}">Data</a></li>
+          <li>
+            <a href="/article/news-and-events">News and events</a>
           </li>
           <li>
-            <a href="https://www.qld.gov.au/contact-us">Contact</a>
+            <a href="/article/case-studies">Case studies</a>
           </li>
-          {% endblock %}
+          <li>
+            <a href="/article/standards-and-guidance">Standards and guidance</a>
+          </li>
+          <li><a href="/article/contact">Contact</a></li>
+		  {% endblock %}
         </ul>
       </nav>
       {% endblock %} {% block header_site_search %}
