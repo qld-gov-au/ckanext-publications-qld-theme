@@ -127,8 +127,8 @@ commands:
     cmd: |
       ahoy start-mailmock &
       sleep 5 &&
-      ahoy cli "behave -k ${*:-test/features}" --tags=smoke && \
-      ahoy cli "behave -k ${*:-test/features} $BEHAVE_TAGS" || \
+      ahoy cli "behave -k ${*:-test/features} --tags=smoke" && \
+      ahoy cli "behave -k ${*:-test/features}" || \
       [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
       ahoy stop-mailmock
 
