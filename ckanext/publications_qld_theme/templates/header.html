@@ -100,7 +100,7 @@
           {% elif h.current_url() != '/' %}
             {% set publications_active=True %}
           {% endif %}
-          {% set dataset_search_route = 'dataset.search' if h.is_ckan_29() else 'search' %}
+          {% set dataset_search_route = 'dataset.search' %}
           <li {% if publications_active %}class="active"{% endif %}><a href="{{ h.url_for(dataset_search_route) }}">Publication</a></li>
           <li {% if standards_active %}class="active"{% endif %}>
             <a href="/dataset/publishing-standards-publications-qld-gov-au" >Standards</a>

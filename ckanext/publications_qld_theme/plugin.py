@@ -3,9 +3,9 @@
 import datetime
 import re
 
-from ckan import model, plugins
+from ckan import plugins
 from ckan.plugins.toolkit import add_resource, add_public_directory, \
-    add_template_directory, c, config, check_ckan_version, get_action, request
+    add_template_directory, c, config, get_action, request
 
 from . import blueprints
 
@@ -102,27 +102,6 @@ def set_background_image_class():
     return background_class
 
 
-def latest_revision(resource_id):
-    resource_revisions = model.Session.query(model.resource_revision_table)\
-        .filter(model.ResourceRevision.id == resource_id,
-                model.ResourceRevision.expired_timestamp > '9999-01-01')
-    highest_value = None
-    for revision in resource_revisions:
-        if highest_value is None or revision.revision_timestamp > \
-                highest_value.revision_timestamp:
-            highest_value = revision
-    return highest_value
-
-
-def populate_revision(resource):
-    if 'revision_timestamp' in resource \
-            or is_ckan_29():
-        return
-    current_revision = latest_revision(resource['id'])
-    if current_revision is not None:
-        resource['revision_timestamp'] = current_revision.revision_timestamp
-
-
 def unreplied_comments_x_days(thread_url):
     """A helper function for Data.Qld Engagement Reporting
     to highlight un-replied comments after x number of days.
@@ -140,19 +119,10 @@ def unreplied_comments_x_days(thread_url):
     return comment_ids
 
 
-def is_ckan_29():
-    """
-    Returns True if using CKAN 2.9+, with Flask and Webassets.
-    Returns False if those are not present.
-    """
-    return check_ckan_version(min_version='2.9.0')
-
-
 class PublicationsQldThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.ITemplateHelpers)
-    if is_ckan_29():
-        plugins.implements(plugins.IBlueprint)
+    plugins.implements(plugins.IBlueprint)
 
     # IConfigurer
 
@@ -175,10 +145,8 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
             'is_prod': is_prod,
             'comment_notification_recipients_enabled':
                 get_comment_notification_recipients_enabled,
-            'populate_revision': populate_revision,
             'unreplied_comments_x_days': unreplied_comments_x_days,
             'is_reporting_enabled': is_reporting_enabled,
-            'is_ckan_29': is_ckan_29,
         }
 
     # IBlueprint
