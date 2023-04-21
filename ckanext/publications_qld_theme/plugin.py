@@ -54,6 +54,10 @@ def is_reporting_enabled():
     return _is_action_configured('report_list')
 
 
+def is_apikey_enabled():
+    return _is_action_configured('user_generate_apikey')
+
+
 def is_request_for_resource():
     """
     Searching for a url path for /dataset/ and /resource/
@@ -163,6 +167,7 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
                 get_comment_notification_recipients_enabled,
             'unreplied_comments_x_days': unreplied_comments_x_days,
             'is_reporting_enabled': is_reporting_enabled,
+            'is_apikey_enabled': is_apikey_enabled,
             'dashboard_index_route': dashboard_index_route,
         }
 
