@@ -165,6 +165,14 @@ group_create=$( \
 )
 echo ${group_create}
 
+echo "Creating Dave's Books group:"
+group_create=$( \
+    curl -LsH "Authorization: ${API_KEY}" \
+    --data '{"name": "dave", "title": "Dave'"'"'s books", "description": "These are books that David likes."}' \
+    ${CKAN_ACTION_URL}/group_create
+)
+echo ${group_create}
+
 echo "Creating config value for excluded display name words:"
 
 curl -LsH "Authorization: ${API_KEY}" \
