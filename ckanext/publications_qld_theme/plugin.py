@@ -5,7 +5,7 @@ import re
 
 from ckan import plugins
 from ckan.plugins.toolkit import add_resource, add_public_directory, \
-    add_template_directory, c, config, get_action, request
+    add_template_directory, c, check_ckan_version, config, get_action, request
 
 from . import blueprints
 
@@ -21,12 +21,19 @@ def get_year():
     return now.year
 
 
+def _is_action_configured(name):
+    try:
+        return get_action(name) is not None
+    except KeyError:
+        return False
+
+
 def ytp_comments_enabled():
-    return "ytp_comments" in config.get('ckan.plugins', False)
+    return _is_action_configured('comment_count')
 
 
 def is_datarequests_enabled():
-    return "datarequests" in config.get('ckan.plugins', False)
+    return _is_action_configured('list_datarequests')
 
 
 def get_all_groups():
@@ -44,7 +51,7 @@ def get_comment_notification_recipients_enabled():
 
 
 def is_reporting_enabled():
-    return 'data_qld_reporting' in config.get('ckan.plugins', '')
+    return _is_action_configured('report_list')
 
 
 def is_request_for_resource():
