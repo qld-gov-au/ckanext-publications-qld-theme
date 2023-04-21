@@ -34,6 +34,6 @@ Feature: Dataset APIs
         And I press "Add Data"
         And I press the element with xpath "//form[@id='resource-edit']//a[string() = 'Link']"
         And I fill in "name" with "Test"
-        And I fill in "url" with "https://example.com"
+        And I execute the script "$('#resource-edit [name=url]').val('https://example.com')"
         And I press the element with xpath "//button[contains(string(), 'Finish')]"
         Then I should see "Testing dataset creation"
