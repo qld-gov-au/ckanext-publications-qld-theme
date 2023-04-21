@@ -45,7 +45,7 @@ echo "Creating ${TEST_ORG_TITLE} organisation:"
 
 TEST_ORG=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data "name=${TEST_ORG_NAME}&title=${TEST_ORG_TITLE}" \
+    --data '{"name": "'"${TEST_ORG_NAME}"'", "title": "'"${TEST_ORG_TITLE}"'"}' \
     ${CKAN_ACTION_URL}/organization_create
 )
 
@@ -54,25 +54,19 @@ TEST_ORG_ID=$(echo $TEST_ORG | $PYTHON ${APP_DIR}/bin/extract-id.py)
 echo "Assigning test users to '${TEST_ORG_TITLE}' organisation (${TEST_ORG_ID}):"
 
 curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=${TEST_ORG_ID}&object=test_org_admin&object_type=user&capacity=admin" \
+    --data '{"id": "'"${TEST_ORG_ID}"'", "object": "test_org_admin", "object_type": "user", "capacity": "admin"}' \
     ${CKAN_ACTION_URL}/member_create
 
 curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=${TEST_ORG_ID}&object=test_org_editor&object_type=user&capacity=editor" \
+    --data '{"id": "'"${TEST_ORG_ID}"'", "object": "test_org_editor", "object_type": "user", "capacity": "editor"}' \
     ${CKAN_ACTION_URL}/member_create
 
 curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=${TEST_ORG_ID}&object=test_org_member&object_type=user&capacity=member" \
+    --data '{"id": "'"${TEST_ORG_ID}"'", "object": "test_org_member", "object_type": "user", "capacity": "member"}' \
     ${CKAN_ACTION_URL}/member_create
 ##
 # END.
 #
-
-# Creating test data hierarchy which creates organisations assigned to datasets
-ckan_cli create-test-data hierarchy
-
-# Creating basic test data which has datasets with resources
-ckan_cli create-test-data basic
 
 add_user_if_needed organisation_admin "Organisation Admin" organisation_admin@localhost
 add_user_if_needed editor "Publisher" publisher@localhost
@@ -83,13 +77,13 @@ add_user_if_needed walker "Walker" walker@localhost
 # Create private test dataset with our standard fields
 curl -LsH "Authorization: ${API_KEY}" \
     --data '{"name": "test-dataset", "owner_org": "'"${TEST_ORG_ID}"'", "private": true,
-"author_email": "admin@localhost", "version": "1.0", "license_id": "other-open", "notes": "test"}' \
+"author_email": "admin@localhost", "version": "1.0", "license_id": "other-open", "notes": "private test"}' \
     ${CKAN_ACTION_URL}/package_create
 
 # Create public test dataset with our standard fields
 curl -LsH "Authorization: ${API_KEY}" \
     --data '{"name": "public-test-dataset", "owner_org": "'"${TEST_ORG_ID}"'",
-"author_email": "admin@localhost", "version": "1.0", "license_id": "other-open", "notes": "test"}' \
+"author_email": "admin@localhost", "version": "1.0", "license_id": "other-open", "notes": "public test"}' \
     ${CKAN_ACTION_URL}/package_create
 
 # Create publishing standards dataset
@@ -97,25 +91,23 @@ curl -LsH "Authorization: ${API_KEY}" \
     --data "name=publishing-standards-publications-qld-gov-au&owner_org=${TEST_ORG_ID}" \
     ${CKAN_ACTION_URL}/package_create
 
-# Datasets need to be assigned to an organisation
-
-echo "Assigning test Datasets to Organisation..."
-
-echo "Updating annakarenina to use ${TEST_ORG_TITLE} organisation:"
-package_owner_org_update=$( \
-    curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=annakarenina&organization_id=${TEST_ORG_NAME}" \
-    ${CKAN_ACTION_URL}/package_owner_org_update
-)
 echo ${package_owner_org_update}
 
-echo "Updating warandpeace to use ${TEST_ORG_TITLE} organisation:"
-package_owner_org_update=$( \
+echo "Creating department-of-health organisation:"
+organisation_create=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=warandpeace&organization_id=${TEST_ORG_NAME}" \
-    ${CKAN_ACTION_URL}/package_owner_org_update
+    --data "name=department-of-health&title=Department%20of%20Health" \
+    ${CKAN_ACTION_URL}/organization_create
 )
-echo ${package_owner_org_update}
+echo ${organisation_create}
+
+echo "Creating food-standards-agency organisation:"
+organisation_create=$( \
+    curl -LsH "Authorization: ${API_KEY}" \
+    --data "name=food-standards-agency&title=Food%20Standards%20Agency" \
+    ${CKAN_ACTION_URL}/organization_create
+)
+echo ${organisation_create}
 
 echo "Updating organisation_admin to have admin privileges in the department-of-health Organisation:"
 organisation_admin_update=$( \
