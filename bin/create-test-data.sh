@@ -14,7 +14,7 @@ CKAN_DISPLAY_NAME="${CKAN_DISPLAY_NAME:-Administrator}"
 CKAN_USER_EMAIL="${CKAN_USER_EMAIL:-admin@localhost}"
 CKAN_ACTION_URL=${CKAN_SITE_URL}api/action
 
-. ${APP_DIR}/scripts/activate
+. ${APP_DIR}/bin/activate
 
 add_user_if_needed () {
     echo "Adding user '$2' ($1) with email address [$3]"
@@ -54,7 +54,7 @@ TEST_ORG=$( \
     ${CKAN_ACTION_URL}/organization_create
 )
 
-TEST_ORG_ID=$(echo $TEST_ORG | $PYTHON $APP_DIR/scripts/extract-id.py)
+TEST_ORG_ID=$(echo $TEST_ORG | $PYTHON ${APP_DIR}/bin/extract-id.py)
 
 echo "Assigning test users to '${TEST_ORG_TITLE}' organisation (${TEST_ORG_ID}):"
 
@@ -184,4 +184,4 @@ curl -LsH "Authorization: ${API_KEY}" \
     --data '{"ckanext.data_qld.excluded_display_name_words": "gov"}' \
     ${CKAN_ACTION_URL}/config_option_update
 
-. ${APP_DIR}/scripts/deactivate
+. ${APP_DIR}/bin/deactivate
