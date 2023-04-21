@@ -119,6 +119,15 @@ def unreplied_comments_x_days(thread_url):
     return comment_ids
 
 
+def dashboard_index_route():
+    if check_ckan_version('2.10'):
+        if _is_action_configured('dashboard_activity_list'):
+            return 'activity.dashboard'
+        else:
+            return 'dashboard.datasets'
+    return 'dashboard.index'
+
+
 class PublicationsQldThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.ITemplateHelpers)
@@ -147,6 +156,7 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
                 get_comment_notification_recipients_enabled,
             'unreplied_comments_x_days': unreplied_comments_x_days,
             'is_reporting_enabled': is_reporting_enabled,
+            'dashboard_index_route': dashboard_index_route,
         }
 
     # IBlueprint
