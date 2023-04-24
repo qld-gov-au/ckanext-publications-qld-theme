@@ -201,11 +201,12 @@ def test_package_patch(context, package_id):
     assert '"success": true' in response.text
 
 
-@step(u'I create a dataset with title "{title}"')
-def create_dataset_titled(context, title):
+@step(u'I create a dataset with name "{name}" and title "{title}"')
+def create_dataset_titled(context, name, title):
     context.execute_steps(u"""
         When I visit "/dataset/new"
         And I fill in "title" with "{title}"
+        And I fill in "name" with "{name}" if present
         And I fill in "notes" with "Description"
         And I fill in "version" with "1.0"
         And I fill in "author_email" with "test@me.com"
@@ -217,7 +218,7 @@ def create_dataset_titled(context, title):
         And I fill in "description" with "Test Resource Description"
         And I fill in "size" with "1024" if present
         And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
-    """.format(title=title))
+    """.format(name=name, title=title))
 
 
 @step(u'I create a dataset with license {license} and resource file {file}')
