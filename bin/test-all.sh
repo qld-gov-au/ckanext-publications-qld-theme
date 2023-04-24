@@ -4,9 +4,11 @@
 #
 set -e
 
-./test-lint.sh
+SCRIPT_DIR=`dirname $0`
 
-./test.sh
+$SCRIPT_DIR/test-lint.sh
 
-./test-bdd.sh
+$SCRIPT_DIR/test.sh
+
+$SCRIPT_DIR/test-bdd.sh
 
