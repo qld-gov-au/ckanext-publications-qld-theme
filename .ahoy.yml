@@ -12,7 +12,6 @@ commands:
       ahoy clean
       ahoy build-network
       ahoy up -- --build --force-recreate
-      ahoy install-site
       ahoy title "Build complete"
       ahoy doctor
       ahoy info 1
@@ -36,6 +35,7 @@ commands:
     usage: Build and start Docker containers.
     cmd: |
       docker-compose up -d "$@"
+      ahoy cli '$APP_DIR/bin/init.sh'
       sleep 10
       docker-compose logs
       ahoy cli "dockerize -wait tcp://ckan:5000 -timeout 1m"
@@ -70,17 +70,15 @@ commands:
 
   cli:
     usage: Start a shell inside CLI container or run a command.
-    cmd: if \[ "${#}" -ne 0 \]; then docker exec $(docker-compose ps -q ckan) sh -c '. ${APP_DIR}/scripts/activate; cd $APP_DIR;'" $*"; else docker exec $(docker-compose ps -q ckan) sh -c '. ${APP_DIR}/scripts/activate && cd $APP_DIR && sh'; fi
+    cmd: if \[ "${#}" -ne 0 \]; then docker exec $(docker-compose ps -q ckan) sh -c '. ${APP_DIR}/bin/activate; cd $APP_DIR;'" $*"; else docker exec $(docker-compose ps -q ckan) sh -c '. ${APP_DIR}/bin/activate && cd $APP_DIR && sh'; fi
 
   doctor:
     usage: Find problems with current project setup.
-    cmd: .docker/scripts/doctor.sh "$@"
+    cmd: bin/doctor.sh "$@"
 
   install-site:
-    usage: Install a site.
-    cmd: |
-      ahoy title "Installing a fresh site"
-      ahoy cli '$APP_DIR/scripts/init.sh'
+    usage: Install test site data.
+    cmd: ahoy cli '$APP_DIR/bin/init.sh && $APP_DIR/bin/create-test-data.sh'
 
   clean:
     usage: Remove containers and all build files.
@@ -113,9 +111,8 @@ commands:
     usage: Update files from local repo.
     cmd: |
       docker cp . $(docker-compose ps -q ckan):/srv/app/
-      docker cp .docker/scripts $(docker-compose ps -q ckan):/srv/app/
-      docker cp .docker/scripts/ckan_cli $(docker-compose ps -q ckan):/usr/bin/
-      ahoy cli 'chmod -v u+x /usr/bin/ckan_cli; cp -v .docker/test.ini $CKAN_INI'
+      docker cp bin/ckan_cli $(docker-compose ps -q ckan):/usr/bin/
+      ahoy cli 'chmod -v u+x /usr/bin/ckan_cli $APP_DIR/bin/*; cp -v .docker/test.ini $CKAN_INI'
 
   test-unit:
     usage: Run unit tests.
@@ -127,12 +124,9 @@ commands:
     usage: Run BDD tests.
     cmd: |
       ahoy start-mailmock &
-      if [ "$CKAN_VERSION" = "2.8" ]; then
-        BEHAVE_TAGS="--tags=-ckan29"
-      fi
       sleep 5 &&
-      ahoy cli "behave -k ${*:-test/features}" --tags @smoke && \
-      ahoy cli "behave -k ${*:-test/features} $BEHAVE_TAGS" || \
+      ahoy cli "behave -k ${*:-test/features} --tags=smoke" && \
+      ahoy cli "behave -k ${*:-test/features}" || \
       [ "${ALLOW_BDD_FAIL:-0}" -eq 1 ]
       ahoy stop-mailmock
 

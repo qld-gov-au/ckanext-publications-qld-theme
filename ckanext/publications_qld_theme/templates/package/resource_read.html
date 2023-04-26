@@ -34,11 +34,7 @@
                 {% block resource_actions_inner %}
                 {% if h.check_access('package_update', {'id':pkg.id }) %}
                     <li>
-                    {% if h.is_ckan_29() %}
-                        {% link_for _('Manage'), named_route=pkg.type ~ '_resource.edit', id=pkg.name, resource_id=res.id, class_='btn btn-default', icon='wrench' %}
-                    {% else %}
-                        {% link_for _('Manage'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn btn-default', icon='wrench' %}
-                    {% endif %}
+                    {% link_for _('Manage'), named_route=pkg.type ~ '_resource.edit', id=pkg.name, resource_id=res.id, class_='btn btn-default', icon='wrench' %}
                     </li>
                 {% endif %}
                 {% if res.url and h.is_url(res.url) %}
@@ -109,7 +105,6 @@
     </div>
   {% endblock %}
   {% endif %}
-  {% do h.populate_revision(res) %}
   {{ super() }}
 {% endblock %}
 {% endblock %}
@@ -118,7 +113,7 @@
     <h1 class="page-heading">{{ h.resource_display_name(res)}}
     {% if res.schema %}
         {{ h.get_validation_badge(res)|safe }}
-        {% set type = 'asset' if h.is_ckan_29() else 'resource' %}
+        {% set type = 'asset' %}
         {% include 'snippets/validation_main_' ~ type ~ '.html' %}
     {% endif %}
     </h1>

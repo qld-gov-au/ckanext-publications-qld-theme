@@ -2,11 +2,7 @@
 
 A custom CKAN extension for Publications.Qld
 
-[![CircleCI](https://circleci.com/gh/qld-gov-au/ckanext-publications-qld-theme/tree/develop.svg?style=shield)](https://circleci.com/gh/qld-gov-au/ckanext-publications-qld-theme/tree/develop)
-
 ## Requirements
-
-This theme was written to work with python 2 and CKAN 2.8.x. Qld Gov has now migrated to 2.9.x py2 and by end of 2022 will be on 2.9.x+ py3.
 
 Compatibility with core CKAN versions:
 
@@ -14,7 +10,7 @@ Compatibility with core CKAN versions:
 |-----------------|-----------------|
 | 2.6 and earlier | no              |
 | 2.7             | no              |
-| 2.8             | testing dropped |
+| 2.8             | no              |
 | 2.9.5+ py2      | yes             |
 | 2.9.5+ py3      | yes             |
 
@@ -212,9 +208,5 @@ For a list of supported step-definitions, see https://github.com/ggozad/behaving
 In software engineering, continuous integration (CI) is the practice of merging all developer working copies to a shared mainline several times a day.
 Before feature changes can be merged into a shared mainline, a complete build must run and pass all tests on CI server.
 
-This project uses [Circle CI](https://circleci.com/) as a CI server: it imports production backups into fully built codebase and runs code linting and tests. When tests pass, a deployment process is triggered for nominated branches (usually, `master` and `develop`).
+This project uses [GitHub Actions](https://github.com/features/actions) as a CI server.
 
-Add `[skip ci]` to the commit subject to skip CI build. Useful for documentation changes.
-
-### SSH
-Circle CI supports shell access to the build for 120 minutes after the build is finished when the build is started with SSH support. Use "Rerun job with SSH" button in Circle CI UI to start build with SSH support.

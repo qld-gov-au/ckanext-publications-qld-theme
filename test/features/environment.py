@@ -14,7 +14,7 @@ BASE_URL = 'http://ckan:5000/'
 # URL of remote Chrome instance.
 REMOTE_CHROME_URL = 'http://chrome:4444/wd/hub'
 
-# @see .docker/scripts/init.sh for credentials.
+# @see bin/init.sh for credentials.
 PERSONAS = {
     'SysAdmin': {
         'name': u'admin',
@@ -25,6 +25,12 @@ PERSONAS = {
         'name': u'',
         'email': u'',
         'password': u''
+    },
+    # This user will not be assigned to any organisations
+    'CKANUser': {
+        'name': u'ckan_user',
+        'email': u'ckan_user@localhost',
+        'password': u'Password123!'
     },
     'Organisation Admin': {
         'name': u'organisation_admin',
@@ -49,12 +55,6 @@ PERSONAS = {
     'Foodie': {
         'name': u'foodie',
         'email': u'foodie@localhost',
-        'password': u'Password123!'
-    },
-    # This user will not be assigned to any organisations
-    'CKANUser': {
-        'name': u'ckan_user',
-        'email': u'ckan_user@localhost',
         'password': u'Password123!'
     },
     'TestOrgAdmin': {
