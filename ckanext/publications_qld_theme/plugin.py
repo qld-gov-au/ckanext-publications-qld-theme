@@ -169,6 +169,7 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
             'is_reporting_enabled': is_reporting_enabled,
             'is_apikey_enabled': is_apikey_enabled,
             'dashboard_index_route': dashboard_index_route,
+            'check_ckan_version': check_ckan_version,
         }
 
     # IBlueprint

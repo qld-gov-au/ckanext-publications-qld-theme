@@ -1,5 +1,6 @@
 {% ckan_extends %}
 
+{% set is_ckan_2_10 = h.check_ckan_version('2.10') %}
 {% block header_account_logged %}
 {% if c.userobj.sysadmin %}
   <li>CKAN {{ h.ckan_version() }}</li>
@@ -11,23 +12,40 @@
   {{ super() }}
 {% endblock %}
 <header class="navbar navbar-static-top masthead">
-  {% block header_debug %}
-    {{ super() }}
-  {% endblock %}
   <div class="container">
-    <button
-      data-target="#main-navigation-toggle"
-      data-toggle="collapse"
-      class="btn btn-navbar navbar-toggle collapsed"
-      type="button"
+    {% block header_debug %}
+      {{ super() }}
+    {% endblock %}
+
+    <nav
+      {% if is_ckan_2_10 %}
+      class="navbar navbar-expand-lg navbar-light navbar-collapse"
+      {% endif %}
     >
-      <span class="fa fa-bars"></span>
-      <span class="sr-only">Open/Close Mobile Menu</span>
+    {% if is_ckan_2_10 %}
+    <hgroup class="{{ g.header_class }} navbar-left">
+      <a class="logo" href="https://www.qld.gov.au" title="Link to Queensland Gov website">
+        <img src="https://www.data.qld.gov.au/__data/assets/file/0035/218789/qg-coa-white.svg" alt="Queensland Government" class="d-none d-sm-block">
+        <img src="https://www.data.qld.gov.au/__data/assets/file/0027/218790/qg-coa-stacked-white.svg" alt="Queensland Government" class="d-sm-none d-md-none d-lg-none d-xl-none">
+        <img src="https://www.data.qld.gov.au/__data/assets/file/0028/218791/qg-coa-stacked.svg" alt="Queensland Government" class="d-none d-sm-none d-md-none d-lg-none d-xl-none qg-print-coat-of-arms">
+      </a>
+      <div class="header__data-portal">
+        <a href="/">Publications portal</a>
+      </div>
+
+    </hgroup>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navigation-toggle"
+      aria-controls="main-navigation-toggle" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="fa fa-bars text-white"></span>
     </button>
-    <hgroup class="header-image pull-left">
-      <!--
-                <img src="https://www.data.qld.gov.au/__data/assets/file/0014/100832/qld-gov-open-data-logo.svg" height="37px" alt="Queensland Government">
-      -->
+    {% else %}
+    <div class="navbar-right">
+      <button data-target="#main-navigation-toggle" data-toggle="collapse" class="navbar-toggle collapsed" type="button" aria-label="expand or collapse" aria-expanded="false">
+        <span class="sr-only">{{ _('Toggle navigation') }}</span>
+        <span class="fa fa-bars"></span>
+      </button>
+    </div>
+    <hgroup class="{{ g.header_class }} navbar-left">
       <a class="logo" href="https://www.qld.gov.au" title="Link to Queensland Gov website">
         <img src="https://www.data.qld.gov.au/__data/assets/file/0035/218789/qg-coa-white.svg" alt="Queensland Government" class="hidden-xs">
         <img src="https://www.data.qld.gov.au/__data/assets/file/0027/218790/qg-coa-stacked-white.svg" alt="Queensland Government" class="hidden-sm hidden-md hidden-lg">
@@ -37,11 +55,12 @@
         <a href="/">Publications portal</a>
       </div>
     </hgroup>
+    {% endif %}
 
-    <div class="collapse navbar-collapse" id="main-navigation-toggle">
-      {% block header_site_navigation %}
+    <div class="main-navbar collapse navbar-collapse" id="main-navigation-toggle">
       <nav class="section navigation">
-        <ul class="nav nav-pills">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 nav nav-pills">
+        {% block header_site_navigation %}
           {% block header_site_navigation_tabs %}
           {% if h.current_url().startswith('/dataset/publishing-standards-publications-qld-gov-au') %}
             {% set standards_active=True %}
@@ -67,13 +86,14 @@
             <a href="https://www.qld.gov.au/contact-us">Contact</a>
           </li>
           {% endblock %}
+        {% endblock %}
         </ul>
-      </nav>
-      {% endblock %} {% block header_site_search %}
+      {% block header_site_search %}
         {{ super() }}
       {% endblock %}
+      </nav>
     </div>
+    </nav>
   </div>
 </header>
-
 {% endblock %}
