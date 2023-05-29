@@ -286,7 +286,7 @@ span.label-open {
 /**
     Additions to the Squiz standard CSS library
  */
-div.account-masthead .account ul.unstyled {
+div.account-masthead .account ul.list-unstyled {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -304,14 +304,14 @@ div.account-masthead .account ul.unstyled {
   align-items: center;
 }
 
-div.account-masthead .account ul.unstyled li {
+div.account-masthead .account ul.list-unstyled li {
   margin: 0;
   padding: 0;
   list-style: none;
   border: none;
 }
 
-div.account-masthead .account ul.unstyled li a {
+div.account-masthead .account ul.list-unstyled li a {
   color: #ffffff;
   text-decoration: none;
   line-height: 1rem;
@@ -333,8 +333,8 @@ div.account-masthead .account ul.unstyled li a {
   padding: 0 0.9375rem;
 }
 
-div.account-masthead .account ul.unstyled li a:hover,
-div.account-masthead .account ul.unstyled li a:focus {
+div.account-masthead .account ul.list-unstyled li a:hover,
+div.account-masthead .account ul.list-unstyled li a:focus {
   color: #ffffff;
   background-color: #007eb1;
 }

@@ -8,7 +8,7 @@ Feature: Dataset deletion
         And I wait for 10 seconds
         Then I should see "Data and Resources"
 
-        When I go to "/dataset/edit/dataset-deletion"
+        When I edit the "dataset-deletion" dataset
         Then I press the element with xpath "//a[string()='Delete' and @data-module='confirm-action']"
         Then I press the element with xpath "//button[contains(@class, 'btn-primary') and contains(string(), 'Confirm')]"
         And I wait for 5 seconds

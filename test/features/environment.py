@@ -1,6 +1,6 @@
 import os
-from behaving import environment as benv
 
+from behaving import environment as benv
 from behaving.web.steps.browser import named_browser
 
 # Path to the root of the project.
