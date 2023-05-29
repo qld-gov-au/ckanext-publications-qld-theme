@@ -142,7 +142,6 @@ def fill_in_default_dataset_fields(context):
         And I fill in "notes" with "Description"
         And I fill in "version" with "1.0"
         And I fill in "author_email" with "test@me.com"
-        And I execute the script "document.getElementById('field-license_id').value='other-open'"
     """)
 
 
