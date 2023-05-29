@@ -49,7 +49,7 @@
                             <i class="fa fa-external-link"></i> {{ _('Go to resource') }}
                             {% else %}
                             <i class="fa fa-arrow-circle-o-down"></i> {{ _('Download') }}
-                                {% if res.actual_size or res.size %}({{ res.actual_size or  h.format_resource_filesize(res.size) }}){% endif %}
+                                {% if res.actual_size or res.size %}({{ res.actual_size or h.format_resource_filesize(res.size) }}){% endif %}
                                 {% if res.format %}({{ res.format }}){% endif %}
                             {% endif %}
                         </a>
