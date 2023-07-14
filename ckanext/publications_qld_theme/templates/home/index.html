@@ -1,10 +1,6 @@
 {% extends "page.html" %}
 {% set homepage_style = ( g.homepage_style or '1' ) %}
-{% if h.is_ckan_29() %}
-  {% set org_route_name = 'organization.read' %}
-{% else %}
-  {% set org_route_name = 'organization_read' %}
-{% endif %}
+{% set org_route_name = 'organization.read' %}
 
 {% block subtitle %}{{ _("Welcome") }}{% endblock %}
 

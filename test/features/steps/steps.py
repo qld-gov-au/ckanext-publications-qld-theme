@@ -7,6 +7,7 @@ import email
 import quopri
 import requests
 import uuid
+import six
 
 
 @step(u'I get the current URL')
@@ -63,7 +64,7 @@ def attempt_login(context, password):
     """.format(password))
 
 
-@step(u'I should see a login link')
+@step(u'I should see the login form')
 def login_link_visible(context):
     context.execute_steps(u"""
         Then I should see an element with xpath "//h1[contains(string(), 'Login')]"
@@ -87,15 +88,25 @@ def fill_in_field_if_present(context, name, value):
     """.format(name, value))
 
 
+@step(u'I open the new resource form for dataset "{name}"')
+def go_to_new_resource_form(context, name):
+    context.execute_steps(u"""
+        When I edit the "{name}" dataset
+        And I click the link with text that contains "Resources"
+        And I click the link with text that contains "Add new resource"
+    """.format(name=name))
+
+
 @step(u'I create a resource with name "{name}" and URL "{url}"')
 def add_resource(context, name, url):
     context.execute_steps(u"""
         When I log in
-        And I visit "/dataset/new_resource/test-dataset"
-        And I execute the script "document.getElementById('field-image-url').value='{url}'"
+        And I open the new resource form for dataset "test-dataset"
+        And I execute the script "$('#resource-edit [name=url]').val('{url}')"
         And I fill in "name" with "{name}"
         And I fill in "description" with "description"
         And I fill in "size" with "1024" if present
+        And I execute the script "document.getElementById('field-format').value='HTML'"
         And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
     """.format(name=name, url=url))
 
@@ -105,6 +116,7 @@ def title_random_text(context):
     assert context.persona
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
+        And I fill in "name" with "test-title-{0}" if present
     """.format(uuid.uuid4()))
 
 
@@ -121,6 +133,43 @@ def go_to_dataset(context, name):
 @step(u'I edit the "{name}" dataset')
 def edit_dataset(context, name):
     when_i_visit_url(context, '/dataset/edit/{}'.format(name))
+
+
+@step(u'I fill in default dataset fields')
+def fill_in_default_dataset_fields(context):
+    context.execute_steps(u"""
+        When I fill in title with random text
+        And I fill in "notes" with "Description"
+        And I fill in "version" with "1.0"
+        And I fill in "author_email" with "test@me.com"
+    """)
+
+
+@step(u'I fill in default resource fields')
+def fill_in_default_resource_fields(context):
+    context.execute_steps(u"""
+        When I fill in "name" with "Test Resource"
+        And I fill in "description" with "Test Resource Description"
+        And I fill in "size" with "1024" if present
+    """)
+
+
+@step(u'I fill in link resource fields')
+def fill_in_default_link_resource_fields(context):
+    context.execute_steps(u"""
+        When I execute the script "$('#resource-edit [name=url]').val('https://example.com')"
+        And I execute the script "document.getElementById('field-format').value='HTML'"
+    """)
+
+
+@step(u'I upload "{file_name}" of type "{file_format}" to resource')
+def upload_file_to_resource(context, file_name, file_format):
+    context.execute_steps(u"""
+        When I execute the script "button = document.getElementById('resource-upload-button'); if (button) button.click();"
+        And I attach the file {file_name} to "upload"
+        # Don't quote the injected string since it can have trailing spaces
+        And I execute the script "document.getElementById('field-format').value={file_format}"
+    """.format(file_name=file_name, file_format=file_format))
 
 
 @step(u'I go to group page')
@@ -150,7 +199,16 @@ def go_to_user_profile(context, user_id):
 
 @step(u'I go to the dashboard')
 def go_to_dashboard(context):
-    when_i_visit_url(context, '/dashboard')
+    context.execute_steps(u"""
+        When I visit "/dashboard/datasets"
+    """)
+
+
+@step(u'I should see my datasets')
+def dashboard_datasets(context):
+    context.execute_steps(u"""
+        Then I should see an element with xpath "//li[contains(@class, 'active') and contains(string(), 'My Datasets')]"
+    """)
 
 
 @step(u'I go to the "{user_id}" user API')
@@ -160,12 +218,16 @@ def go_to_user_show(context, user_id):
 
 @step(u'I view the "{group_id}" group API "{including}" users')
 def go_to_group_including_users(context, group_id, including):
-    when_i_visit_url(context, r'/api/3/action/group_show?id={}&include_users={}'.format(group_id, including in ['with', 'including']))
+    when_i_visit_url(
+        context, r'/api/3/action/group_show?id={}&include_users={}'.format(
+            group_id, including in ['with', 'including']))
 
 
 @step(u'I view the "{organisation_id}" organisation API "{including}" users')
 def go_to_organisation_including_users(context, organisation_id, including):
-    when_i_visit_url(context, r'/api/3/action/organization_show?id={}&include_users={}'.format(organisation_id, including in ['with', 'including']))
+    when_i_visit_url(
+        context, r'/api/3/action/organization_show?id={}&include_users={}'.format(
+            organisation_id, including in ['with', 'including']))
 
 
 @step(u'I should be able to download via the element with xpath "{expression}"')
@@ -183,23 +245,19 @@ def test_package_patch(context, package_id):
     assert '"success": true' in response.text
 
 
-@step(u'I create a dataset with title "{title}"')
-def create_dataset_titled(context, title):
+@step(u'I create a dataset with name "{name}" and title "{title}"')
+def create_dataset_titled(context, name, title):
     context.execute_steps(u"""
         When I visit "/dataset/new"
+        And I fill in default dataset fields
         And I fill in "title" with "{title}"
-        And I fill in "notes" with "Description"
-        And I fill in "version" with "1.0"
-        And I fill in "author_email" with "test@me.com"
-        And I fill in "de_identified_data" with "NO" if present
+        And I fill in "name" with "{name}" if present
         And I press "Add Data"
-        And I execute the script "document.getElementById('field-image-url').value='https://example.com'"
-        And I fill in "name" with "Test Resource"
-        And I execute the script "document.getElementById('field-format').value='HTML'"
-        And I fill in "description" with "Test Resource Description"
-        And I fill in "size" with "1024" if present
+        Then I should see "Add New Resource"
+        And I fill in default resource fields
+        And I fill in link resource fields
         And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
-    """.format(title=title))
+    """.format(name=name, title=title))
 
 
 @step(u'I create a dataset with license {license} and resource file {file}')
@@ -212,18 +270,14 @@ def create_dataset(context, license, file_format, file):
     assert context.persona
     context.execute_steps(u"""
         When I visit "/dataset/new"
-        And I fill in title with random text
-        And I fill in "notes" with "Description"
-        And I fill in "version" with "1.0"
-        And I fill in "author_email" with "test@me.com"
+        And I fill in default dataset fields
         And I execute the script "document.getElementById('field-license_id').value={license}"
-        Then I fill in "de_identified_data" with "NO" if present
         And I press "Add Data"
-        And I attach the file {file} to "upload"
-        And I fill in "name" with "Test Resource"
-        And I execute the script "document.getElementById('field-format').value={file_format}"
-        And I fill in "description" with "Test Resource Description"
+        Then I should see "Add New Resource"
+        Then I fill in default resource fields
+        And I upload "{file}" of type "{file_format}" to resource
         And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
+        Then I should see "Data and Resources"
     """.format(license=license, file=file, file_format=file_format))
 
 
@@ -243,7 +297,11 @@ def should_receive_base64_email_containing_texts(context, address, text, text2):
         payload_bytes = quopri.decodestring(payload)
         if len(payload_bytes) > 0:
             payload_bytes += b'='  # do fix the padding error issue
-        decoded_payload = payload_bytes.decode('base64')
+        if six.PY2:
+            decoded_payload = payload_bytes.decode('base64')
+        else:
+            import base64
+            decoded_payload = six.ensure_text(base64.b64decode(six.ensure_binary(payload_bytes)))
         print('decoded_payload: ', decoded_payload)
         return text in decoded_payload and (not text2 or text2 in decoded_payload)
 
