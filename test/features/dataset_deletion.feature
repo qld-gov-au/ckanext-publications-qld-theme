@@ -4,16 +4,14 @@ Feature: Dataset deletion
     Scenario: Sysadmin creates and deletes a dataset
         Given "SysAdmin" as the persona
         When I log in
-        And I create a dataset with name "dataset-deletion" and title "Dataset deletion"
-        And I wait for 10 seconds
-        Then I should see "Data and Resources"
-
-        When I edit the "dataset-deletion" dataset
-        Then I press the element with xpath "//a[string()='Delete' and @data-module='confirm-action']"
-        Then I press the element with xpath "//button[contains(@class, 'btn-primary') and contains(string(), 'Confirm')]"
-        And I wait for 5 seconds
-        Then I should see "Dataset has been deleted"
-        And I should not see "Dataset deletion"
+        And I create a dataset and resource with key-value parameters "notes=Testing dataset deletion" and "url=default"
+        And I edit the "$last_generated_name" dataset
+        When I press the element with xpath "//a[@data-module='confirm-action']"
+        And I confirm dataset deletion
+        And I reload page every 2 seconds until I see an element with xpath "//div[contains(@class, "alert") and contains(string(), "Dataset has been deleted")]" but not more than 5 times
+        Then I should not see an element with xpath "//a[contains(@href, '/dataset/$last_generated_name')]"
         When I go to "/ckan-admin/trash"
-        Then I should see "Dataset deletion"
-        Then I press the element with xpath "//form[contains(@id, 'form-purge-package')]//*[contains(text(), 'Purge')]"
+        Then I should see an element with xpath "//a[contains(@href, '/dataset/$last_generated_name')]"
+        When I press the element with xpath "//form[contains(@id, 'form-purge-package')]//*[contains(string(), 'Purge')]"
+        And I confirm the dialog containing "Are you sure you want to purge datasets?" if present
+        Then I should see "datasets have been purged"

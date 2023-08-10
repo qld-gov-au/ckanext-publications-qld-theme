@@ -1,6 +1,18 @@
 Feature: Theme customisations
 
     @unauthenticated
+    Scenario: As a member of the public, when I go to the consistent asset URLs, I can see the asset
+        Given "Unauthenticated" as the persona
+        When I visit "/assets/css/main"
+        Then I should see "Bootstrap"
+        When I visit "/assets/css/font-awesome"
+        Then I should see "Font Awesome"
+        When I visit "/assets/css/select2"
+        Then I should see "select2-container"
+        When I visit "/assets/js/jquery"
+        Then I should see "jQuery"
+
+    @unauthenticated
     Scenario: Lato font is implemented on homepage
         Given "Unauthenticated" as the persona
         When I go to homepage
@@ -17,7 +29,7 @@ Feature: Theme customisations
         Given "SysAdmin" as the persona
         When I log in
         And I go to organisation page
-        And I click the link with text that contains "Add Organisation"
+        And I press "Add Organisation"
         Then I should see "Create an Organisation"
         When I execute the script "$('#field-name').val('Org without description')"
         And I execute the script "$('#field-url').val('org-without-description')"
@@ -30,7 +42,7 @@ Feature: Theme customisations
         Given "SysAdmin" as the persona
         When I log in
         And I go to organisation page
-        And I click the link with text that contains "Add Organisation"
+        And I press "Add Organisation"
         Then I should see "Create an Organisation"
         When I execute the script "$('#field-name').val('Org with description')"
         And I execute the script "$('#field-url').val('org-with-description')"
@@ -44,16 +56,17 @@ Feature: Theme customisations
     @unauthenticated
     Scenario: Explore button does not exist on dataset detail page
         Given "Unauthenticated" as the persona
-        When I go to dataset page
-        And I click the link with text that contains "public-test"
+        When I go to dataset "public-test-dataset"
         Then I should not see "Explore"
 
     @unauthenticated
-    Scenario: Explore button does not exist on dataset detail page
+    Scenario: As a member of the public, I should be able to see the help text on the organisation page
+        Given "Unauthenticated" as the persona
         When I go to organisation page
         Then I should see "Organisations are Queensland Government departments, other agencies or legislative entities responsible for publishing open data on this portal."
 
     Scenario: Register user password must be 10 characters or longer
+        Given "Unauthenticated" as the persona
         When I go to register page
         And I fill in "name" with "name"
         And I fill in "fullname" with "fullname"
@@ -64,6 +77,7 @@ Feature: Theme customisations
         Then I should see "Password: Your password must be 10 characters or longer"
 
     Scenario: Register user password must contain at least one number, lowercase letter, capital letter, and symbol
+        Given "Unauthenticated" as the persona
         When I go to register page
         And I fill in "name" with "name"
         And I fill in "fullname" with "fullname"
@@ -73,7 +87,10 @@ Feature: Theme customisations
         And I press "Create Account"
         Then I should see "Password: Must contain at least one number, lowercase letter, capital letter, and symbol"
 
-    Scenario: Menu items are present and correct
+    @unauthenticated
+    @Publications
+    Scenario: Publications - Menu items are present and correct
+        Given "Unauthenticated" as the persona
         When I go to "/dataset"
         Then I should see an element with xpath "//li[contains(@class, 'active')]/a[contains(string(), 'Publication') and (@href='/dataset' or @href='/dataset/')]"
         And I should see an element with xpath "//li[not(contains(@class, 'active'))]/a[contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
