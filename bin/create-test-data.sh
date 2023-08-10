@@ -46,7 +46,8 @@ echo "Creating ${TEST_ORG_TITLE} organisation:"
 
 TEST_ORG=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data '{"name": "'"${TEST_ORG_NAME}"'", "title": "'"${TEST_ORG_TITLE}"'"}' \
+    --data '{"name": "'"${TEST_ORG_NAME}"'", "title": "'"${TEST_ORG_TITLE}"'",
+        "description": "Organisation for testing issues"}' \
     ${CKAN_ACTION_URL}/organization_create
 )
 
@@ -137,7 +138,7 @@ echo ${foodie_update}
 echo "Creating non-organisation group:"
 group_create=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data "name=silly-walks" \
+    --data '{"name": "silly-walks", "title": "Silly walks", "description": "The Ministry of Silly Walks"}' \
     ${CKAN_ACTION_URL}/group_create
 )
 echo ${group_create}
@@ -145,7 +146,7 @@ echo ${group_create}
 echo "Updating group_admin to have admin privileges in the silly-walks group:"
 group_admin_update=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=silly-walks&username=group_admin&role=admin" \
+    --data '{"id": "silly-walks", "username": "group_admin", "role": "admin"}' \
     ${CKAN_ACTION_URL}/group_member_create
 )
 echo ${group_admin_update}
@@ -153,7 +154,7 @@ echo ${group_admin_update}
 echo "Updating walker to have editor privileges in the silly-walks group:"
 walker_update=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=silly-walks&username=walker&role=editor" \
+    --data '{"id": "silly-walks", "username": "walker", "role": "editor"}' \
     ${CKAN_ACTION_URL}/group_member_create
 )
 echo ${walker_update}

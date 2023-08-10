@@ -1,45 +1,68 @@
-from behave import step
-from behaving.personas.steps import *  # noqa: F401, F403
-from behaving.mail.steps import *  # noqa: F401, F403
-from behaving.web.steps import *  # noqa: F401, F403
-from behaving.web.steps.url import when_i_visit_url
 import email
 import quopri
 import requests
 import uuid
 import six
 
+from behave import when, then
+from behaving.personas.steps import *  # noqa: F401, F403
+from behaving.mail.steps import *  # noqa: F401, F403
+from behaving.web.steps import *  # noqa: F401, F403
+from behaving.web.steps.url import when_i_visit_url
 
-@step(u'I get the current URL')
-def get_current_url(context):
-    context.browser.evaluate_script("document.documentElement.clientWidth")
+# Monkey-patch Selenium 3 to handle Python 3.9
+import base64
+if not hasattr(base64, 'encodestring'):
+    base64.encodestring = base64.encodebytes
+
+# Monkey-patch Behaving to handle function rename
+from behaving.web.steps import forms
+if not hasattr(forms, 'fill_in_elem_by_name'):
+    forms.fill_in_elem_by_name = forms.i_fill_in_field
 
 
-@step(u'I go to homepage')
+@when(u'I take a debugging screenshot')
+def debug_screenshot(context):
+    """ Take a screenshot only if debugging is enabled in the persona.
+    """
+    if context.persona and context.persona.get('debug') == 'True':
+        context.execute_steps(u"""
+            Then I take a screenshot
+        """)
+
+
+@when(u'I go to homepage')
 def go_to_home(context):
-    when_i_visit_url(context, '/')
-
-
-@step(u'I go to register page')
-def go_to_register_page(context):
     context.execute_steps(u"""
-        When I go to homepage
-        And I click the link with text that contains "Register"
+        When I visit "/"
     """)
 
 
-@step(u'I log in')
-def log_in(context):
-    assert context.persona
+@when(u'I go to register page')
+def go_to_register_page(context):
     context.execute_steps(u"""
         When I go to homepage
-        And I resize the browser to 1024x2048
-        And I click the link with text that contains "Log in"
+        And I press "Register"
+    """)
+
+
+@when(u'I log in')
+def log_in(context):
+    context.execute_steps(u"""
+        When I go to homepage
+        And I expand the browser height
+        And I press "Log in"
         And I log in directly
     """)
 
 
-@step(u'I log in directly')
+@when(u'I expand the browser height')
+def expand_height(context):
+    # Work around x=null bug in Selenium set_window_size
+    context.browser.driver.set_window_rect(x=0, y=0, width=1024, height=4096)
+
+
+@when(u'I log in directly')
 def log_in_directly(context):
     """
     This differs to the `log_in` function above by logging in directly to a page where the user login form is presented
@@ -47,14 +70,14 @@ def log_in_directly(context):
     :return:
     """
 
-    assert context.persona
+    assert context.persona, "A persona is required to log in, found [{}] in context. Have you configured the personas in before_scenario?".format(context.persona)
     context.execute_steps(u"""
         When I attempt to log in with password "$password"
         Then I should see an element with xpath "//a[@title='Log out']"
     """)
 
 
-@step(u'I attempt to log in with password "{password}"')
+@when(u'I attempt to log in with password "{password}"')
 def attempt_login(context, password):
     assert context.persona
     context.execute_steps(u"""
@@ -64,14 +87,14 @@ def attempt_login(context, password):
     """.format(password))
 
 
-@step(u'I should see the login form')
+@then(u'I should see the login form')
 def login_link_visible(context):
     context.execute_steps(u"""
         Then I should see an element with xpath "//h1[contains(string(), 'Login')]"
     """)
 
 
-@step(u'I request a password reset')
+@when(u'I request a password reset')
 def request_reset(context):
     assert context.persona
     context.execute_steps(u"""
@@ -81,23 +104,63 @@ def request_reset(context):
     """)
 
 
-@step(u'I fill in "{name}" with "{value}" if present')
+@when(u'I fill in "{name}" with "{value}" if present')
 def fill_in_field_if_present(context, name, value):
     context.execute_steps(u"""
-        When I execute the script "field = document.getElementById('field-{0}'); if (field) field.value = '{1}';"
+        When I execute the script "field = $('#field-{0}'); if (!field.length) field = $('#{0}'); if (!field.length) field = $('[name={0}]'); field.val('{1}'); field.keyup();"
     """.format(name, value))
 
 
-@step(u'I open the new resource form for dataset "{name}"')
+@when(u'I clear the URL field')
+def clear_url(context):
+    context.execute_steps(u"""
+        When I execute the script "$('a.btn-remove-url:contains(Clear)').click();"
+    """)
+
+
+@when(u'I confirm the dialog containing "{text}" if present')
+def confirm_dialog_if_present(context, text):
+    if context.browser.is_text_present(text):
+        context.execute_steps(u"""
+            When I press the element with xpath "//*[contains(@class, 'modal-dialog')]//button[contains(@class, 'btn-primary')]"
+        """)
+
+
+@when(u'I confirm dataset deletion')
+def confirm_dataset_deletion_dialog_if_present(context):
+    dialog_text = "Briefly describe the reason for deleting this dataset"
+    if context.browser.is_text_present(dialog_text):
+        context.execute_steps(u"""
+            Then I should see an element with xpath "//div[@class='modal-footer']//button[@class='btn btn-primary' and @disabled='disabled']"
+            When I fill in "deletion-reason" with "it should be longer than 10 characters" if present
+            Then I should not see an element with xpath "//div[@class='modal-footer']//button[@class='btn btn-primary' and @disabled='disabled']"
+        """)
+    # Press the Confirm button whether it is in a dialog or a page
+    context.execute_steps(u"""
+        When I press the element with xpath "//button[contains(@class, 'btn-primary') and contains(string(), 'Confirm') ]"
+        Then I should see "Dataset has been deleted"
+    """)
+
+
+@when(u'I open the new resource form for dataset "{name}"')
 def go_to_new_resource_form(context, name):
     context.execute_steps(u"""
-        When I edit the "{name}" dataset
-        And I click the link with text that contains "Resources"
-        And I click the link with text that contains "Add new resource"
-    """.format(name=name))
+        When I edit the "{0}" dataset
+    """.format(name))
+    if context.browser.is_element_present_by_xpath("//*[contains(@class, 'btn-primary') and contains(string(), 'Next:')]"):
+        # Draft dataset, proceed directly to resource form
+        context.execute_steps(u"""
+            When I press "Next:"
+        """)
+    else:
+        # Existing dataset, browse to the resource form
+        context.execute_steps(u"""
+            When I press "Resources"
+            And I press "Add new resource"
+        """)
 
 
-@step(u'I create a resource with name "{name}" and URL "{url}"')
+@when(u'I create a resource with name "{name}" and URL "{url}"')
 def add_resource(context, name, url):
     context.execute_steps(u"""
         When I log in
@@ -111,41 +174,65 @@ def add_resource(context, name, url):
     """.format(name=name, url=url))
 
 
-@step(u'I fill in title with random text')
+@when(u'I fill in title with random text')
 def title_random_text(context):
     assert context.persona
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
         And I fill in "name" with "test-title-{0}" if present
+        And I set "last_generated_name" to "test-title-{0}"
     """.format(uuid.uuid4()))
 
 
-@step(u'I go to dataset page')
+@when(u'I go to dataset page')
 def go_to_dataset_page(context):
-    when_i_visit_url(context, '/dataset')
+    context.execute_steps(u"""
+        When I visit "/dataset"
+    """)
 
 
-@step(u'I go to dataset "{name}"')
+@when(u'I go to dataset "{name}"')
 def go_to_dataset(context, name):
-    when_i_visit_url(context, '/dataset/' + name)
+    context.execute_steps(u"""
+        When I visit "/dataset/{0}"
+    """.format(name))
 
 
-@step(u'I edit the "{name}" dataset')
+@when(u'I edit the "{name}" dataset')
 def edit_dataset(context, name):
-    when_i_visit_url(context, '/dataset/edit/{}'.format(name))
+    context.execute_steps(u"""
+        When I visit "/dataset/edit/{0}"
+    """.format(name))
 
 
-@step(u'I fill in default dataset fields')
+@when(u'I select the "{licence_id}" licence')
+def select_licence(context, licence_id):
+    # Licence requires special interaction due to fancy JavaScript
+    context.execute_steps(u"""
+        When I execute the script "$('#field-license_id').val('{0}').trigger('change')"
+    """.format(licence_id))
+
+
+@when(u'I enter the resource URL "{url}"')
+def enter_resource_url(context, url):
+    context.execute_steps(u"""
+        When I execute the script "$('#resource-edit [name=url]').val('{0}')"
+    """.format(url))
+
+
+@when(u'I fill in default dataset fields')
 def fill_in_default_dataset_fields(context):
     context.execute_steps(u"""
         When I fill in title with random text
         And I fill in "notes" with "Description"
         And I fill in "version" with "1.0"
         And I fill in "author_email" with "test@me.com"
+        And I select the "other-open" licence
+        And I fill in "de_identified_data" with "NO" if present
     """)
 
 
-@step(u'I fill in default resource fields')
+@when(u'I fill in default resource fields')
 def fill_in_default_resource_fields(context):
     context.execute_steps(u"""
         When I fill in "name" with "Test Resource"
@@ -154,89 +241,98 @@ def fill_in_default_resource_fields(context):
     """)
 
 
-@step(u'I fill in link resource fields')
+@when(u'I fill in link resource fields')
 def fill_in_default_link_resource_fields(context):
     context.execute_steps(u"""
-        When I execute the script "$('#resource-edit [name=url]').val('https://example.com')"
+        When I enter the resource URL "https://example.com"
         And I execute the script "document.getElementById('field-format').value='HTML'"
+        And I fill in "size" with "1024" if present
     """)
 
 
-@step(u'I upload "{file_name}" of type "{file_format}" to resource')
+@when(u'I upload "{file_name}" of type "{file_format}" to resource')
 def upload_file_to_resource(context, file_name, file_format):
     context.execute_steps(u"""
         When I execute the script "button = document.getElementById('resource-upload-button'); if (button) button.click();"
-        And I attach the file {file_name} to "upload"
+        And I attach the file "{file_name}" to "upload"
         # Don't quote the injected string since it can have trailing spaces
-        And I execute the script "document.getElementById('field-format').value={file_format}"
+        And I execute the script "document.getElementById('field-format').value='{file_format}'"
+        And I fill in "size" with "1024" if present
     """.format(file_name=file_name, file_format=file_format))
 
 
-@step(u'I go to group page')
+@when(u'I go to group page')
 def go_to_group_page(context):
-    when_i_visit_url(context, '/group')
+    context.execute_steps(u"""
+        When I visit "/group"
+    """)
 
 
-@step(u'I go to organisation page')
+@when(u'I go to organisation page')
 def go_to_organisation_page(context):
-    when_i_visit_url(context, '/organization')
+    context.execute_steps(u"""
+        When I visit "/organization"
+    """)
 
 
-@step(u'I search the autocomplete API for user "{username}"')
+@when(u'I search the autocomplete API for user "{username}"')
 def go_to_user_autocomplete(context, username):
-    when_i_visit_url(context, '/api/2/util/user/autocomplete?q={}'.format(username))
+    context.execute_steps(u"""
+        When I visit "/api/2/util/user/autocomplete?q={0}"
+    """.format(username))
 
 
-@step(u'I go to the user list API')
+@when(u'I go to the user list API')
 def go_to_user_list(context):
-    when_i_visit_url(context, '/api/3/action/user_list')
+    context.execute_steps(u"""
+        When I visit "/api/3/action/user_list"
+    """)
 
 
-@step(u'I go to the "{user_id}" profile page')
+@when(u'I go to the "{user_id}" profile page')
 def go_to_user_profile(context, user_id):
-    when_i_visit_url(context, '/user/{}'.format(user_id))
+    context.execute_steps(u"""
+        When I visit "/user/{0}"
+    """.format(user_id))
 
 
-@step(u'I go to the dashboard')
+@when(u'I go to the dashboard')
 def go_to_dashboard(context):
     context.execute_steps(u"""
         When I visit "/dashboard/datasets"
     """)
 
 
-@step(u'I should see my datasets')
+@then(u'I should see my datasets')
 def dashboard_datasets(context):
     context.execute_steps(u"""
         Then I should see an element with xpath "//li[contains(@class, 'active') and contains(string(), 'My Datasets')]"
     """)
 
 
-@step(u'I go to the "{user_id}" user API')
+@when(u'I go to the "{user_id}" user API')
 def go_to_user_show(context, user_id):
-    when_i_visit_url(context, '/api/3/action/user_show?id={}'.format(user_id))
+    context.execute_steps(u"""
+        When I visit "/api/3/action/user_show?id={0}"
+    """.format(user_id))
 
 
-@step(u'I view the "{group_id}" group API "{including}" users')
-def go_to_group_including_users(context, group_id, including):
-    when_i_visit_url(
-        context, r'/api/3/action/group_show?id={}&include_users={}'.format(
-            group_id, including in ['with', 'including']))
+@when(u'I view the "{group_id}" {group_type} API "{including}" users')
+def go_to_group_including_users(context, group_id, group_type, including):
+    if group_type == "organisation":
+        group_type = "organization"
+    context.execute_steps(u"""
+        When I visit "/api/3/action/{1}_show?id={0}&include_users={2}"
+    """.format(group_id, group_type, including in ['with', 'including']))
 
 
-@step(u'I view the "{organisation_id}" organisation API "{including}" users')
-def go_to_organisation_including_users(context, organisation_id, including):
-    when_i_visit_url(
-        context, r'/api/3/action/organization_show?id={}&include_users={}'.format(
-            organisation_id, including in ['with', 'including']))
-
-
-@step(u'I should be able to download via the element with xpath "{expression}"')
+@then(u'I should be able to download via the element with xpath "{expression}"')
 def test_download_element(context, expression):
     url = context.browser.find_by_xpath(expression).first['href']
     assert requests.get(url, cookies=context.browser.cookies.all()).status_code == 200
 
 
-@step(u'I should be able to patch dataset "{package_id}" via the API')
+@then(u'I should be able to patch dataset "{package_id}" via the API')
 def test_package_patch(context, package_id):
     url = context.base_url + 'api/action/package_patch'
     response = requests.post(url, json={'id': package_id}, cookies=context.browser.cookies.all())
@@ -245,7 +341,7 @@ def test_package_patch(context, package_id):
     assert '"success": true' in response.text
 
 
-@step(u'I create a dataset with name "{name}" and title "{title}"')
+@when(u'I create a dataset with name "{name}" and title "{title}"')
 def create_dataset_titled(context, name, title):
     context.execute_steps(u"""
         When I visit "/dataset/new"
@@ -260,12 +356,12 @@ def create_dataset_titled(context, name, title):
     """.format(name=name, title=title))
 
 
-@step(u'I create a dataset with license {license} and resource file {file}')
+@when(u'I create a dataset with license {license} and resource file {file}')
 def create_dataset_json(context, license, file):
     create_dataset(context, license, 'JSON', file)
 
 
-@step(u'I create a dataset with license {license} and {file_format} resource file {file}')
+@when(u'I create a dataset with license {license} and {file_format} resource file {file}')
 def create_dataset(context, license, file_format, file):
     assert context.persona
     context.execute_steps(u"""
@@ -281,12 +377,12 @@ def create_dataset(context, license, file_format, file):
     """.format(license=license, file=file, file_format=file_format))
 
 
-@step(u'I should receive a base64 email at "{address}" containing "{text}"')
+@then(u'I should receive a base64 email at "{address}" containing "{text}"')
 def should_receive_base64_email_containing_text(context, address, text):
     should_receive_base64_email_containing_texts(context, address, text, None)
 
 
-@step(u'I should receive a base64 email at "{address}" containing both "{text}" and "{text2}"')
+@then(u'I should receive a base64 email at "{address}" containing both "{text}" and "{text2}"')
 def should_receive_base64_email_containing_texts(context, address, text, text2):
     # The default behaving step does not convert base64 emails
     # Modified the default step to decode the payload from base64
@@ -317,21 +413,31 @@ def log_in_go_to_admin_config(context):
     """)
 
 
-@step(u'I go to admin config page')
+@when(u'I go to admin config page')
 def go_to_admin_config(context):
-    when_i_visit_url(context, '/ckan-admin/config')
+    context.execute_steps(u"""
+        When I visit "/ckan-admin/config"
+    """)
 
 
-@step(u'I log out')
+@when(u'I log out')
 def log_out(context):
-    when_i_visit_url(context, '/user/logout')
+    context.execute_steps(u"""
+        When I visit "/user/_logout"
+        Then I should see "Log in"
+    """)
 
 
 # ckanext-qgov
 
 
-@step(u'I lock my account')
+@when(u'I lock my account')
 def lock_account(context):
-    when_i_visit_url(context, "/user/login")
+    context.execute_steps(u"""
+        When I visit "/user/login"
+    """)
     for x in range(11):
-        attempt_login(context, "incorrect password")
+        context.execute_steps(u"""
+            When I attempt to log in with password "incorrect password"
+        """)
+
