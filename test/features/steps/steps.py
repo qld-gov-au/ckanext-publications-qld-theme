@@ -1,14 +1,14 @@
+import datetime
 import email
 import quopri
 import requests
-import uuid
 import six
+import uuid
 
 from behave import when, then
 from behaving.personas.steps import *  # noqa: F401, F403
 from behaving.mail.steps import *  # noqa: F401, F403
 from behaving.web.steps import *  # noqa: F401, F403
-from behaving.web.steps.url import when_i_visit_url
 
 # Monkey-patch Selenium 3 to handle Python 3.9
 import base64
@@ -122,8 +122,8 @@ def clear_url(context):
 def confirm_dialog_if_present(context, text):
     if context.browser.is_text_present(text):
         context.execute_steps(u"""
-            When I press the element with xpath "//*[contains(@class, 'modal-dialog')]//button[contains(@class, 'btn-primary')]"
-        """)
+            When I press the element with xpath "//div[contains(string(), '{0}')]/..//button[contains(@class, 'btn-primary')]"
+        """.format(text))
 
 
 @when(u'I confirm dataset deletion')
@@ -158,20 +158,6 @@ def go_to_new_resource_form(context, name):
             When I press "Resources"
             And I press "Add new resource"
         """)
-
-
-@when(u'I create a resource with name "{name}" and URL "{url}"')
-def add_resource(context, name, url):
-    context.execute_steps(u"""
-        When I log in
-        And I open the new resource form for dataset "test-dataset"
-        And I execute the script "$('#resource-edit [name=url]').val('{url}')"
-        And I fill in "name" with "{name}"
-        And I fill in "description" with "description"
-        And I fill in "size" with "1024" if present
-        And I execute the script "document.getElementById('field-format').value='HTML'"
-        And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
-    """.format(name=name, url=url))
 
 
 @when(u'I fill in title with random text')
@@ -215,9 +201,11 @@ def select_licence(context, licence_id):
 
 @when(u'I enter the resource URL "{url}"')
 def enter_resource_url(context, url):
-    context.execute_steps(u"""
-        When I execute the script "$('#resource-edit [name=url]').val('{0}')"
-    """.format(url))
+    if url != "default":
+        context.execute_steps(u"""
+            When I clear the URL field
+            When I execute the script "$('#resource-edit [name=url]').val('{0}')"
+        """.format(url))
 
 
 @when(u'I fill in default dataset fields')
@@ -253,7 +241,7 @@ def fill_in_default_link_resource_fields(context):
 @when(u'I upload "{file_name}" of type "{file_format}" to resource')
 def upload_file_to_resource(context, file_name, file_format):
     context.execute_steps(u"""
-        When I execute the script "button = document.getElementById('resource-upload-button'); if (button) button.click();"
+        When I execute the script "$('#resource-upload-button').trigger(click);"
         And I attach the file "{file_name}" to "upload"
         # Don't quote the injected string since it can have trailing spaces
         And I execute the script "document.getElementById('field-format').value='{file_format}'"
@@ -341,40 +329,118 @@ def test_package_patch(context, package_id):
     assert '"success": true' in response.text
 
 
-@when(u'I create a dataset with name "{name}" and title "{title}"')
-def create_dataset_titled(context, name, title):
+# Parse a "key=value::key2=value2" parameter string and return an iterator of (key, value) pairs.
+def _parse_params(param_string):
+    params = {}
+    for param in param_string.split("::"):
+        entry = param.split("=", 1)
+        params[entry[0]] = entry[1] if len(entry) > 1 else ""
+    return six.iteritems(params)
+
+
+def _create_dataset_from_params(context, params):
     context.execute_steps(u"""
         When I visit "/dataset/new"
         And I fill in default dataset fields
-        And I fill in "title" with "{title}"
-        And I fill in "name" with "{name}" if present
-        And I press "Add Data"
-        Then I should see "Add New Resource"
-        And I fill in default resource fields
-        And I fill in link resource fields
-        And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
-    """.format(name=name, title=title))
-
-
-@when(u'I create a dataset with license {license} and resource file {file}')
-def create_dataset_json(context, license, file):
-    create_dataset(context, license, 'JSON', file)
-
-
-@when(u'I create a dataset with license {license} and {file_format} resource file {file}')
-def create_dataset(context, license, file_format, file):
-    assert context.persona
+    """)
+    for key, value in _parse_params(params):
+        if key == "name":
+            context.execute_steps(u"""
+                When I set "last_generated_name" to "{0}"
+            """.format(value))
+        elif key == "owner_org":
+            # Owner org uses UUIDs as its values, so we need to rely on displayed text
+            context.execute_steps(u"""
+                When I select by text "{1}" from "{0}"
+            """.format(key, value))
+        elif key in ["update_frequency", "request_privacy_assessment", "private"]:
+            context.execute_steps(u"""
+                When I select "{1}" from "{0}"
+            """.format(key, value))
+        elif key == "license_id":
+            context.execute_steps(u"""
+                When I select the "{0}" licence
+            """.format(value))
+        else:
+            context.execute_steps(u"""
+                When I fill in "{0}" with "{1}" if present
+            """.format(key, value))
     context.execute_steps(u"""
-        When I visit "/dataset/new"
-        And I fill in default dataset fields
-        And I execute the script "document.getElementById('field-license_id').value={license}"
+        When I take a debugging screenshot
         And I press "Add Data"
         Then I should see "Add New Resource"
-        Then I fill in default resource fields
-        And I upload "{file}" of type "{file_format}" to resource
-        And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
+    """)
+
+
+@when(u'I create a dataset with key-value parameters "{params}"')
+def create_dataset_from_params(context, params):
+    _create_dataset_from_params(context, params)
+    context.execute_steps(u"""
+        When I go to dataset "$last_generated_name"
+    """)
+
+
+@when(u'I create a dataset and resource with key-value parameters "{params}" and "{resource_params}"')
+def create_dataset_and_resource_from_params(context, params, resource_params):
+    _create_dataset_from_params(context, params)
+    context.execute_steps(u"""
+        When I create a resource with key-value parameters "{0}"
         Then I should see "Data and Resources"
-    """.format(license=license, file=file, file_format=file_format))
+    """.format(resource_params))
+
+
+def _is_truthy(text):
+    return text and text.lower() in ["true", "t", "yes", "y"]
+
+
+def _get_yn_value(value, y_value="TRUE", n_value="FALSE"):
+    return y_value if _is_truthy(value) else n_value
+
+
+# Creates a resource using default values apart from the ones specified.
+# The browser should already be on the create/edit resource page.
+@when(u'I create a resource with key-value parameters "{resource_params}"')
+def create_resource_from_params(context, resource_params):
+    context.execute_steps(u"""
+        When I fill in default resource fields
+        And I fill in link resource fields
+    """)
+    for key, value in _parse_params(resource_params):
+        if key == "url":
+            context.execute_steps(u"""
+                When I enter the resource URL "{0}"
+            """.format(value))
+        elif key == "upload":
+            if value == "default":
+                value = "test_game_data.csv"
+            context.execute_steps(u"""
+                When I clear the URL field
+                And I execute the script "$('#resource-upload-button').click();"
+                And I attach the file "{0}" to "upload"
+            """.format(value))
+        elif key == "format":
+            context.execute_steps(u"""
+                When I execute the script "document.getElementById('field-format').value='{0}'"
+            """.format(value))
+        elif key == "resource_visible":
+            option = _get_yn_value(value)
+            context.execute_steps(u"""
+                When I select "{1}" from "{0}"
+            """.format(key, option))
+        elif key in ["governance_acknowledgement", "request_privacy_assessment"]:
+            option = _get_yn_value(value, "YES", "NO")
+            context.execute_steps(u"""
+                When I select "{1}" from "{0}"
+            """.format(key, option))
+        else:
+            context.execute_steps(u"""
+                When I fill in "{0}" with "{1}" if present
+            """.format(key, value))
+    context.execute_steps(u"""
+        When I take a debugging screenshot
+        And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
+        And I take a debugging screenshot
+    """)
 
 
 @then(u'I should receive a base64 email at "{address}" containing "{text}"')
@@ -404,15 +470,6 @@ def should_receive_base64_email_containing_texts(context, address, text, text2):
     assert context.mail.user_messages(address, filter_contents)
 
 
-@step(u'I log in and go to admin config page')
-def log_in_go_to_admin_config(context):
-    assert context.persona
-    context.execute_steps(u"""
-        When I log in
-        And I go to admin config page
-    """)
-
-
 @when(u'I go to admin config page')
 def go_to_admin_config(context):
     context.execute_steps(u"""
@@ -428,6 +485,22 @@ def log_out(context):
     """)
 
 
+@when(u'I reload page every {seconds:d} seconds until I see an element with xpath "{xpath}" but not more than {reload_times:d} times')
+def reload_page_every_n_until_find(context, xpath, seconds=5, reload_times=5):
+    for _ in range(reload_times):
+        element = context.browser.is_element_present_by_xpath(
+            xpath, wait_time=seconds
+        )
+        if element:
+            assert element, 'Element with xpath "{}" was found'.format(xpath)
+            return
+        else:
+            print("Element with xpath '{}' was not found, reloading at {}...".format(xpath, datetime.datetime.now()))
+            context.browser.reload()
+
+    assert False, 'Element with xpath "{}" was not found'.format(xpath)
+
+
 # ckanext-qgov
 
 
@@ -440,4 +513,3 @@ def lock_account(context):
         context.execute_steps(u"""
             When I attempt to log in with password "incorrect password"
         """)
-
