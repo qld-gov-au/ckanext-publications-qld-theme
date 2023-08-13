@@ -11,4 +11,3 @@ $SCRIPT_DIR/test-lint.sh
 $SCRIPT_DIR/test.sh
 
 $SCRIPT_DIR/test-bdd.sh
-

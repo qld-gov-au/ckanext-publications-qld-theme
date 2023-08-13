@@ -2,8 +2,7 @@
 ##
 # Create some example content for extension BDD tests.
 #
-set -e
-set -x
+set -ex
 
 CKAN_ACTION_URL=${CKAN_SITE_URL}api/action
 CKAN_USER_NAME="${CKAN_USER_NAME:-admin}"
@@ -30,6 +29,19 @@ if [ "$API_KEY" = "None" ]; then
 fi
 
 ##
+# BEGIN: Add sysadmin config values.
+#
+echo "Adding sysadmin config:"
+
+curl -LsH "Authorization: ${API_KEY}" \
+    --data '{"ckanext.data_qld.excluded_display_name_words": "gov"}' \
+    ${CKAN_ACTION_URL}/config_option_update
+
+##
+# END.
+#
+
+##
 # BEGIN: Create a test organisation with test users for admin, editor and member
 #
 TEST_ORG_NAME=test-organisation
@@ -46,7 +58,8 @@ echo "Creating ${TEST_ORG_TITLE} organisation:"
 
 TEST_ORG=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data '{"name": "'"${TEST_ORG_NAME}"'", "title": "'"${TEST_ORG_TITLE}"'"}' \
+    --data '{"name": "'"${TEST_ORG_NAME}"'", "title": "'"${TEST_ORG_TITLE}"'",
+        "description": "Organisation for testing issues"}' \
     ${CKAN_ACTION_URL}/organization_create
 )
 
@@ -69,12 +82,6 @@ curl -LsH "Authorization: ${API_KEY}" \
 # END.
 #
 
-add_user_if_needed organisation_admin "Organisation Admin" organisation_admin@localhost
-add_user_if_needed editor "Publisher" publisher@localhost
-add_user_if_needed foodie "Foodie" foodie@localhost
-add_user_if_needed group_admin "Group Admin" group_admin@localhost
-add_user_if_needed walker "Walker" walker@localhost
-
 # Create private test dataset with our standard fields
 curl -LsH "Authorization: ${API_KEY}" \
     --data '{"name": "test-dataset", "owner_org": "'"${TEST_ORG_ID}"'", "private": true,
@@ -94,14 +101,6 @@ curl -LsH "Authorization: ${API_KEY}" \
 
 echo ${package_owner_org_update}
 
-echo "Creating department-of-health organisation:"
-organisation_create=$( \
-    curl -LsH "Authorization: ${API_KEY}" \
-    --data "name=department-of-health&title=Department%20of%20Health" \
-    ${CKAN_ACTION_URL}/organization_create
-)
-echo ${organisation_create}
-
 echo "Creating food-standards-agency organisation:"
 organisation_create=$( \
     curl -LsH "Authorization: ${API_KEY}" \
@@ -110,34 +109,13 @@ organisation_create=$( \
 )
 echo ${organisation_create}
 
-echo "Updating organisation_admin to have admin privileges in the department-of-health Organisation:"
-organisation_admin_update=$( \
-    curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=department-of-health&username=organisation_admin&role=admin" \
-    ${CKAN_ACTION_URL}/organization_member_create
-)
-echo ${organisation_admin_update}
-
-echo "Updating publisher to have editor privileges in the department-of-health Organisation:"
-publisher_update=$( \
-    curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=department-of-health&username=editor&role=editor" \
-    ${CKAN_ACTION_URL}/organization_member_create
-)
-echo ${publisher_update}
-
-echo "Updating foodie to have admin privileges in the food-standards-agency Organisation:"
-foodie_update=$( \
-    curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=food-standards-agency&username=foodie&role=admin" \
-    ${CKAN_ACTION_URL}/organization_member_create
-)
-echo ${foodie_update}
+add_user_if_needed group_admin "Group Admin" group_admin@localhost
+add_user_if_needed walker "Walker" walker@localhost
 
 echo "Creating non-organisation group:"
 group_create=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data "name=silly-walks" \
+    --data '{"name": "silly-walks", "title": "Silly walks", "description": "The Ministry of Silly Walks"}' \
     ${CKAN_ACTION_URL}/group_create
 )
 echo ${group_create}
@@ -145,7 +123,7 @@ echo ${group_create}
 echo "Updating group_admin to have admin privileges in the silly-walks group:"
 group_admin_update=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=silly-walks&username=group_admin&role=admin" \
+    --data '{"id": "silly-walks", "username": "group_admin", "role": "admin"}' \
     ${CKAN_ACTION_URL}/group_member_create
 )
 echo ${group_admin_update}
@@ -153,7 +131,7 @@ echo ${group_admin_update}
 echo "Updating walker to have editor privileges in the silly-walks group:"
 walker_update=$( \
     curl -LsH "Authorization: ${API_KEY}" \
-    --data "id=silly-walks&username=walker&role=editor" \
+    --data '{"id": "silly-walks", "username": "walker", "role": "editor"}' \
     ${CKAN_ACTION_URL}/group_member_create
 )
 echo ${walker_update}
@@ -166,18 +144,8 @@ group_create=$( \
 )
 echo ${group_create}
 
-echo "Creating Dave's Books group:"
-group_create=$( \
-    curl -LsH "Authorization: ${API_KEY}" \
-    --data '{"name": "dave", "title": "Dave'"'"'s books", "description": "These are books that David likes."}' \
-    ${CKAN_ACTION_URL}/group_create
-)
-echo ${group_create}
-
-echo "Creating config value for excluded display name words:"
-
-curl -LsH "Authorization: ${API_KEY}" \
-    --data '{"ckanext.data_qld.excluded_display_name_words": "gov"}' \
-    ${CKAN_ACTION_URL}/config_option_update
+##
+# END.
+#
 
 . ${APP_DIR}/bin/deactivate
