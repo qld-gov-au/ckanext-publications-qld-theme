@@ -2,10 +2,7 @@
 ##
 # Run tests in CI.
 #
-set -e
+set -ex
 
-
-echo "==> Run BDD tests"
 ahoy install-site
-ahoy cli "rm -r test/screenshots || true"
-ahoy test-bdd || (echo "run get-logs.sh for container logs if required"; exit 1)
+ahoy test-bdd
