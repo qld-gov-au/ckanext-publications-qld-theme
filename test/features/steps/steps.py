@@ -27,7 +27,7 @@ def debug_screenshot(context):
     """
     if context.persona and context.persona.get('debug') == 'True':
         context.execute_steps(u"""
-            Then I take a screenshot
+            When I take a screenshot
         """)
 
 
@@ -59,7 +59,7 @@ def log_in(context):
 @when(u'I expand the browser height')
 def expand_height(context):
     # Work around x=null bug in Selenium set_window_size
-    context.browser.driver.set_window_rect(x=0, y=0, width=1024, height=4096)
+    context.browser.driver.set_window_rect(x=0, y=0, width=1024, height=3072)
 
 
 @when(u'I log in directly')
@@ -120,10 +120,17 @@ def clear_url(context):
 
 @when(u'I confirm the dialog containing "{text}" if present')
 def confirm_dialog_if_present(context, text):
-    if context.browser.is_text_present(text):
-        context.execute_steps(u"""
-            When I press the element with xpath "//div[contains(string(), '{0}')]/..//button[contains(@class, 'btn-primary')]"
-        """.format(text))
+    dialog_xpath = "//*[contains(@class, 'modal-dialog') and contains(string(), '{0}')]".format(text)
+    if context.browser.is_element_present_by_xpath(dialog_xpath):
+        parent_xpath = dialog_xpath
+    elif context.browser.is_text_present(text):
+        parent_xpath = "//div[contains(string(), '{0}')]/..".format(text)
+    else:
+        return
+    button_xpath = parent_xpath + "//button[contains(@class, 'btn-primary')]"
+    context.execute_steps(u"""
+        When I press the element with xpath "{0}"
+    """.format(button_xpath))
 
 
 @when(u'I confirm dataset deletion')
@@ -157,6 +164,7 @@ def go_to_new_resource_form(context, name):
         context.execute_steps(u"""
             When I press "Resources"
             And I press "Add new resource"
+            And I take a debugging screenshot
         """)
 
 
@@ -166,6 +174,7 @@ def title_random_text(context):
     context.execute_steps(u"""
         When I fill in "title" with "Test Title {0}"
         And I fill in "name" with "test-title-{0}" if present
+        And I set "last_generated_title" to "Test Title {0}"
         And I set "last_generated_name" to "test-title-{0}"
     """.format(uuid.uuid4()))
 
@@ -181,7 +190,26 @@ def go_to_dataset_page(context):
 def go_to_dataset(context, name):
     context.execute_steps(u"""
         When I visit "/dataset/{0}"
+        And I take a debugging screenshot
     """.format(name))
+
+
+@when(u'I go to the first resource in the dataset')
+def go_to_first_resource(context):
+    context.execute_steps(u"""
+        When I press the element with xpath "//li[@class="resource-item"]/a"
+        And I take a debugging screenshot
+    """)
+
+
+@when(u'I show all the fields')
+def show_more_fields(context):
+    """
+    Click the 'Show more' link, if present, to reveal all the metadata.
+    """
+    context.execute_steps(u"""
+        When I execute the script "$('a.show-more').click()"
+    """)
 
 
 @when(u'I edit the "{name}" dataset')
@@ -343,12 +371,17 @@ def _create_dataset_from_params(context, params):
         When I visit "/dataset/new"
         And I fill in default dataset fields
     """)
+    if 'private' not in params:
+        params = params + "::private=False"
     for key, value in _parse_params(params):
         if key == "name":
+            # 'name' doesn't need special input, but we want to remember it
             context.execute_steps(u"""
                 When I set "last_generated_name" to "{0}"
             """.format(value))
-        elif key == "owner_org":
+
+        # Don't use elif here, we still want to type 'name' as usual
+        if key == "owner_org":
             # Owner org uses UUIDs as its values, so we need to rely on displayed text
             context.execute_steps(u"""
                 When I select by text "{1}" from "{0}"
@@ -464,7 +497,7 @@ def should_receive_base64_email_containing_texts(context, address, text, text2):
         else:
             import base64
             decoded_payload = six.ensure_text(base64.b64decode(six.ensure_binary(payload_bytes)))
-        print('decoded_payload: ', decoded_payload)
+        print('Searching for', text, ' and ', text2, ' in decoded_payload: ', decoded_payload)
         return text in decoded_payload and (not text2 or text2 in decoded_payload)
 
     assert context.mail.user_messages(address, filter_contents)
