@@ -11,7 +11,7 @@ Compatibility with core CKAN versions:
 | 2.6 and earlier | no              |
 | 2.7             | no              |
 | 2.8             | no              |
-| 2.9.5+ py2      | yes             |
+| 2.9.5+ py2      | no              |
 | 2.9.5+ py3      | yes             |
 
 
