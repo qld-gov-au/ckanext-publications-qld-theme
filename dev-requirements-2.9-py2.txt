@@ -7,6 +7,7 @@ factory-boy
 flake8==3.8.3
 mock
 pytest-ckan
+requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
 six>=1.13.0
 splinter>=0.13.0,<0.17
 urllib3>=1.26.19,<2 # not directly required, pinned by Snyk to avoid a vulnerability
@@ -15,4 +16,3 @@ urllib3>=1.26.19,<2 # not directly required, pinned by Snyk to avoid a vulnerabi
 -e git+https://github.com/qld-gov-au/ckanext-qgov.git@6.0.1#egg=ckanext-qgov
 -e git+https://github.com/qld-gov-au/ckanext-resource-type-validation.git@1.0.5#egg=ckanext-resource-type-validation
 -e git+https://github.com/qld-gov-au/ckanext-ssm-config.git@0.0.2#egg=ckanext-ssm-config
-requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
