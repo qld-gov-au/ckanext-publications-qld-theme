@@ -9,6 +9,7 @@ mock
 pytest-ckan
 six>=1.13.0
 splinter>=0.13.0,<0.17
+urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
 zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
 
 -e git+https://github.com/qld-gov-au/ckanext-csrf-filter.git@1.1.8#egg=ckanext-csrf-filter
