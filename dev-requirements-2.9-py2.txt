@@ -7,6 +7,7 @@ factory-boy
 flake8==3.8.3
 mock
 pytest-ckan
+requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
 six>=1.13.0
 splinter>=0.13.0,<0.17
 urllib3>=1.26.19,<2 # not directly required, pinned by Snyk to avoid a vulnerability
