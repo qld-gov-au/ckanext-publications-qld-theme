@@ -15,6 +15,7 @@ import base64
 if not hasattr(base64, 'encodestring'):
     base64.encodestring = base64.encodebytes
 
+
 # Monkey-patch Behaving to handle function rename
 from behaving.web.steps import forms
 if not hasattr(forms, 'fill_in_elem_by_name'):
@@ -129,7 +130,8 @@ def confirm_dialog_if_present(context, text):
         return
     button_xpath = parent_xpath + "//button[contains(@class, 'btn-primary')]"
     context.execute_steps(u"""
-        When I press the element with xpath "{0}"
+        When I take a debugging screenshot
+        And I press the element with xpath "{0}"
     """.format(button_xpath))
 
 
@@ -161,9 +163,12 @@ def go_to_new_resource_form(context, name):
         """)
     else:
         # Existing dataset, browse to the resource form
+        if context.browser.is_element_present_by_xpath("//a[contains(string(), 'Resources') and contains(@href, '/dataset/resources/')]"):
+            context.execute_steps(u"""
+                When I press "Resources"
+            """)
         context.execute_steps(u"""
-            When I press "Resources"
-            And I press "Add new resource"
+            When I press "Add new resource"
             And I take a debugging screenshot
         """)
 
@@ -471,7 +476,7 @@ def create_resource_from_params(context, resource_params):
             """.format(key, value))
     context.execute_steps(u"""
         When I take a debugging screenshot
-        And I press the element with xpath "//form[contains(@class, 'resource-form')]//button[contains(@class, 'btn-primary')]"
+        And I press the element with xpath "//form[contains(@data-module, 'resource-form')]//button[contains(@class, 'btn-primary')]"
         And I take a debugging screenshot
     """)
 
