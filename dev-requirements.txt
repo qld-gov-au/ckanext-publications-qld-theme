@@ -1,5 +1,4 @@
 behaving==3.1.5
-boto3>=1.28.0
 Appium-Python-Client==2.10.1
 ckanapi==4.3
 ckantoolkit>=0.0.4
@@ -10,9 +9,10 @@ pytest-ckan
 requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
 selenium<4.10
 six>=1.13.0
+urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
 zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
 
--e git+https://github.com/qld-gov-au/ckanext-csrf-filter.git@1.1.8#egg=ckanext-csrf-filter
--e git+https://github.com/qld-gov-au/ckanext-qgov.git@6.0.2#egg=ckanext-qgov
--e git+https://github.com/qld-gov-au/ckanext-resource-type-validation.git@1.0.5#egg=ckanext-resource-type-validation
--e git+https://github.com/qld-gov-au/ckanext-ssm-config.git@0.0.2#egg=ckanext-ssm-config
+-e git+https://github.com/qld-gov-au/ckanext-csrf-filter.git@1.2.1#egg=ckanext-csrf-filter
+-e git+https://github.com/qld-gov-au/ckanext-qgov.git@7.0.0#egg=ckanext-qgov
+-e git+https://github.com/qld-gov-au/ckanext-resource-type-validation.git@1.0.9#egg=ckanext-resource-type-validation
+-e git+https://github.com/qld-gov-au/ckanext-ssm-config.git@0.1.0#egg=ckanext-ssm-config
