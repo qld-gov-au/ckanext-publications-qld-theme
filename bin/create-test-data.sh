@@ -127,4 +127,4 @@ echo ${group_create}
 # END.
 #
 
-. ${APP_DIR}/bin/deactivate
+. "${APP_DIR}"/bin/deactivate
