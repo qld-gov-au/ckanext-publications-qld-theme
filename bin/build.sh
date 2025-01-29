@@ -21,7 +21,7 @@ CKAN_GIT_VERSION=$CKAN_VERSION
 CKAN_GIT_ORG=qld-gov-au
 
 if [ "$CKAN_VERSION" = "2.11" ]; then
-    CKAN_GIT_VERSION=ckan-2.11.1
+    CKAN_GIT_VERSION=ckan-2.11.1-qgov.2
 elif [ "$CKAN_VERSION" = "2.10" ]; then
     CKAN_GIT_VERSION=ckan-2.10.5-qgov.5
 elif [ "$CKAN_VERSION" = "2.9" ]; then
