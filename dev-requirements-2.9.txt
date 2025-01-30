@@ -13,6 +13,6 @@ urllib3>=2.2.2 # not directly required, pinned by Snyk to avoid a vulnerability
 zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
 
 -e git+https://github.com/qld-gov-au/ckanext-csrf-filter.git@2.0.0#egg=ckanext-csrf-filter
--e git+https://github.com/qld-gov-au/ckanext-qgov.git@7.0.0#egg=ckanext-qgov
+-e git+https://github.com/qld-gov-au/ckanext-qgov.git@6.0.4#egg=ckanext-qgov
 -e git+https://github.com/qld-gov-au/ckanext-resource-type-validation.git@1.0.10#egg=ckanext-resource-type-validation
 -e git+https://github.com/qld-gov-au/ckanext-ssm-config.git@0.1.0#egg=ckanext-ssm-config
