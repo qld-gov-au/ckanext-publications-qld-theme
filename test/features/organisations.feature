@@ -1,4 +1,4 @@
-@users
+@organisations
 Feature: Organization APIs
 
     Scenario Outline: Organisation membership is accessible to admins of the organisation
@@ -34,9 +34,23 @@ Feature: Organization APIs
     Scenario: Organisation overview is accessible to everyone
         Given "Unauthenticated" as the persona
         When I go to organisation page
-        Then I should see "Test Organisation"
+        And I expand the browser height
+        Then I should see "Food Standards Agency"
         And I should not see an element with xpath "//a[contains(@href, '?action=read')]"
-        And I should see an element with xpath "//a[contains(@href, '/organization/test-organisation')]"
+        And I should see an element with xpath "//a[contains(@href, '/organization/food-standards-agency')]"
+        When I press "Food Standards Agency"
+        And I take a debugging screenshot
+        And I press "Activity Stream"
+        Then I should see "created the org"
 
-        When I view the "test-organisation" organisation API "not including" users
-        Then I should see an element with xpath "//*[contains(string(), '"success": true') and contains(string(), '"name": "test-organisation"')]"
+        When I view the "food-standards-agency" organisation API "not including" users
+        Then I should see an element with xpath "//*[contains(string(), '"success": true') and contains(string(), '"name": "food-standards-agency"')]"
+
+    Scenario: Organisation list is accessible via the dashboard
+        Given "SysAdmin" as the persona
+        When I log in
+        And I go to the dashboard
+        And I press "My Organisations"
+        Then I should see "Test Organisation"
+        And I should see an element with xpath "//a[contains(@href, 'organization/new') and contains(string(), 'Add Organisation')]"
+
