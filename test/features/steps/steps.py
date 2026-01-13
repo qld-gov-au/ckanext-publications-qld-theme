@@ -94,6 +94,25 @@ def login_link_visible(context):
     """)
 
 
+@then(u'I should see the current year gazette link')
+def current_gazette_link_visible(context):
+    gazette_link_visible(context, datetime.datetime.now().strftime("%Y"))
+
+
+@then(u'I should see the year "{year}" gazette link')
+def gazette_link_visible(context, year):
+    context.execute_steps(u"""
+        Then I should see an element with xpath "//a[@href = '/group/gazettes-{0}' and string() = 'Gazettes {0}']"
+    """.format(year))
+
+
+@then(u'I should not see the year "{year}" gazette link')
+def gazette_link_not_visible(context, year):
+    context.execute_steps(u"""
+        Then I should not see an element with xpath "//a[@href = '/group/gazettes-{0}']"
+    """.format(year))
+
+
 @when(u'I request a password reset')
 def request_reset(context):
     assert context.persona
