@@ -77,6 +77,16 @@ api_call '{"id": "'"${TEST_ORG_ID}"'", "object": "test_org_member", "object_type
 # END.
 #
 
+# Creating test data hierarchy which creates organisations assigned to datasets
+echo "Creating food-standards-agency organisation:"
+organisation_create=$( \
+    api_call "name=food-standards-agency&title=Food%20Standards%20Agency" organization_create
+)
+echo ${organisation_create}
+
+add_user_if_needed group_admin "Group Admin" group_admin@localhost
+add_user_if_needed walker "Walker" walker@localhost
+
 # Create private test dataset with our standard fields
 api_call '{"name": "test-dataset", "owner_org": "'"${TEST_ORG_ID}"'", "private": true,
 "author_email": "admin@localhost", "version": "1.0", "license_id": "other-open", "notes": "private test"}' package_create
@@ -89,15 +99,6 @@ api_call '{"name": "public-test-dataset", "owner_org": "'"${TEST_ORG_ID}"'",
 api_call "name=publishing-standards-publications-qld-gov-au&owner_org=${TEST_ORG_ID}" package_create
 
 echo ${package_owner_org_update}
-
-echo "Creating food-standards-agency organisation:"
-organisation_create=$( \
-    api_call "name=food-standards-agency&title=Food%20Standards%20Agency" organization_create
-)
-echo ${organisation_create}
-
-add_user_if_needed group_admin "Group Admin" group_admin@localhost
-add_user_if_needed walker "Walker" walker@localhost
 
 echo "Creating non-organisation group:"
 group_create=$( \

@@ -94,6 +94,25 @@ def login_link_visible(context):
     """)
 
 
+@then(u'I should see the current year gazette link')
+def current_gazette_link_visible(context):
+    gazette_link_visible(context, datetime.datetime.now().strftime("%Y"))
+
+
+@then(u'I should see the year "{year}" gazette link')
+def gazette_link_visible(context, year):
+    context.execute_steps(u"""
+        Then I should see an element with xpath "//a[@href = '/group/gazettes-{0}' and string() = 'Gazettes {0}']"
+    """.format(year))
+
+
+@then(u'I should not see the year "{year}" gazette link')
+def gazette_link_not_visible(context, year):
+    context.execute_steps(u"""
+        Then I should not see an element with xpath "//a[@href = '/group/gazettes-{0}']"
+    """.format(year))
+
+
 @when(u'I request a password reset')
 def request_reset(context):
     assert context.persona
@@ -174,8 +193,17 @@ def confirm_dataset_deletion_dialog_if_present(context):
 @when(u'I open the new resource form for dataset "{name}"')
 def go_to_new_resource_form(context, name):
     context.execute_steps(u"""
-        When I edit the "{0}" dataset
+        When I go to dataset "{0}"
     """.format(name))
+    if context.browser.is_element_present_by_xpath("//a[text() = 'Add new resource']"):
+        context.execute_steps(u"""
+            When I press "Add new resource"
+        """)
+        return
+
+    context.execute_steps(u"""
+        When I press the element with xpath "//div[contains(@class, 'action')]//a[contains(@href, '/dataset/edit/')]"
+    """)
     if context.browser.is_element_present_by_xpath("//*[contains(@class, 'btn-primary') and contains(string(), 'Next:')]"):
         # Draft dataset, proceed directly to resource form
         context.execute_steps(u"""
