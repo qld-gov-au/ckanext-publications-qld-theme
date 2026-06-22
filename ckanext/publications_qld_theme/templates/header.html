@@ -157,6 +157,8 @@
                     {% block header_site_navigation %}
                         {% block header_site_navigation_tabs %}
                         {% set dataset_search_route = 'dataset.search' %}
+                        {% set on_standards = h.current_url().startswith('/dataset/publishing-standards-publications-qld-gov-au') %}
+                        {% set on_gazettes = h.current_url().startswith('/dataset/gazettes-') or h.current_url().startswith('/group/gazettes-') %}
                             <li class="nav-item">
                                 <a class="nav-link {% if h.current_url() == '/' %}active" aria-current="page{% endif %}" href="/">
                                     <span class="qld-icon qld-icon-md qld-icon-home" aria-hidden="true"></span>
@@ -164,12 +166,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {% if h.current_url().startswith('/dataset') %}active" aria-current="page{% endif %}" href="{{ h.url_for(dataset_search_route) }}">
+                                <a class="nav-link {% if h.current_url().startswith('/dataset') and not on_standards and not on_gazettes %}active" aria-current="page{% endif %}" href="{{ h.url_for(dataset_search_route) }}">
                                   Publication
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {% if h.current_url().startswith('/dataset/publishing-standards-publications-qld-gov-au') %}active" aria-current="page{% endif %}" href="/dataset/publishing-standards-publications-qld-gov-au">
+                                <a class="nav-link {% if on_standards %}active" aria-current="page{% endif %}" href="/dataset/publishing-standards-publications-qld-gov-au">
                                   Standards
                                 </a>
                             </li>
@@ -179,7 +181,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {% if h.current_url().startswith('/dataset/gazettes-') %}active" aria-current="page{% endif %}" href="/gazettes-current">
+                                <a class="nav-link {% if on_gazettes %}active" aria-current="page{% endif %}" href="/gazettes-current">
                                   Gazettes
                                 </a>
                             </li>
@@ -193,14 +195,14 @@
                           {% if g.userobj %}
                             {% if g.userobj.sysadmin %}
                             <li class="nav-item alt mobile-only">
-                                <a class="nav-link {% if h.current_url().startswith('/visualisations') %}active" aria-current="page{% endif %}" href="{{ h.url_for('admin.index') }}" title="{{ _('Sysadmin settings') }}">
+                                <a class="nav-link" href="{{ h.url_for('admin.index') }}" title="{{ _('Sysadmin settings') }}">
                                     <i class="fa fa-gavel" aria-hidden="true"></i>
                                     <span class="text">{{ _('Admin') }}</span>
                                 </a>
                             </li>
                             {% endif %}
                             <li class="nav-item alt mobile-only">
-                                <a class="nav-link {% if h.current_url().startswith('/visualisations') %}active" aria-current="page{% endif %}" href="{{ h.url_for('user.read', id=g.userobj.name) }}" class="image" title="{{ _('View profile') }}">
+                                <a class="nav-link" href="{{ h.url_for('user.read', id=g.userobj.name) }}" class="image" title="{{ _('View profile') }}">
                                     {{ h.gravatar((g.userobj.email_hash if g and g.userobj else ''), size=22) }}
                                     <span class="username">{{ g.userobj.display_name }}</span>
                                 </a>
@@ -208,14 +210,14 @@
                             {% set new_activities = h.new_activities() %}
                             <li class="nav-item alt mobile-only notifications {% if new_activities > 0 %}notifications-important{% endif %}">
                                 {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', new_activities) %}
-                                <a class="nav-link {% if h.current_url().startswith('/visualisations') %}active" aria-current="page{% endif %}" href="{{ h.url_for(h.dashboard_index_route()) }}" title="{{ notifications_tooltip }}">
+                                <a class="nav-link {% if h.current_url().startswith('/dashboard') %}active" aria-current="page{% endif %}" href="{{ h.url_for(h.dashboard_index_route()) }}" title="{{ notifications_tooltip }}">
                                     <i class="fa fa-tachometer" aria-hidden="true"></i>
                                     <span class="text">{{ _('Dashboard') }}</span>
                                     <span class="badge">{{ new_activities }}</span>
                                 </a>
                             </li>
                             <li class="nav-item alt mobile-only">
-                              <a class="nav-link {% if h.current_url().startswith('/visualisations') %}active" aria-current="page{% endif %}" href="{{ h.url_for('user.edit', id=c.userobj.name) }}" title="{{ _('Profile settings') }}">
+                              <a class="nav-link" href="{{ h.url_for('user.edit', id=c.userobj.name) }}" title="{{ _('Profile settings') }}">
                                 <i class="fa fa-cog" aria-hidden="true"></i>
                                 <span class="text">{{ _('Profile settings') }}</span>
                               </a>
@@ -235,11 +237,6 @@
                               {% if h.check_access('user_create') %}
                                 <li class="nav-item alt mobile-only">
                                   {% link_for _('Register'), named_route='user.register', class_='nav-link sub' %}
-                                </li>
-                              {% endif %}
-                              {% if h.is_datarequests_enabled() %}
-                                <li class="nav-item alt mobile-only">
-                                  <a class="nav-link {% if h.current_url().startswith('/visualisations') %}active" aria-current="page{% endif %}" href="{{ h.url_for('datarequest.index') }}">Request data</a>
                                 </li>
                               {% endif %}
                           {% endif %}
