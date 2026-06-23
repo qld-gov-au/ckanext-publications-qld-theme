@@ -99,6 +99,43 @@ Feature: Theme customisations
         And I should see an element with xpath "//li/a[contains(@class, 'active') and contains(string(), 'Gazettes') and @href='/gazettes-current']"
         And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Contact') and @href='https://www.qld.gov.au/contact-us']"
 
+        When I go to "/dataset"
+        And I narrow the browser to mobile width
+        Then I should see an element with xpath "//button[@id='burgerBtn' and contains(string(), 'Menu')]"
+        When I press "Menu"
+        Then I should see an element with xpath "//li/a[contains(@class, 'active') and contains(string(), 'Publication') and (@href='/dataset' or @href='/dataset/')]"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Organisations') and @href='/organization']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Gazettes') and @href='/gazettes-current']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Contact') and @href='https://www.qld.gov.au/contact-us']"
+
+        When I press the element with xpath "//li/a[contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
+        Then I should see an element with xpath "//button[@id='burgerBtn' and contains(string(), 'Menu')]"
+        When I press "Menu"
+        Then I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Publication') and (@href='/dataset' or @href='/dataset/')]"
+        And I should see an element with xpath "//li/a[contains(@class, 'active') and contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Organisations') and @href='/organization']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Gazettes') and @href='/gazettes-current']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Contact') and @href='https://www.qld.gov.au/contact-us']"
+
+        When I press the element with xpath "//li/a[contains(string(), 'Organisations') and @href='/organization']"
+        Then I should see an element with xpath "//button[@id='burgerBtn' and contains(string(), 'Menu')]"
+        When I press "Menu"
+        Then I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Publication') and (@href='/dataset' or @href='/dataset/')]"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
+        And I should see an element with xpath "//li/a[contains(@class, 'active') and contains(string(), 'Organisations') and @href='/organization']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Gazettes') and @href='/gazettes-current']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Contact') and @href='https://www.qld.gov.au/contact-us']"
+
+        When I go to "/group/gazettes-test"
+        Then I should see an element with xpath "//button[@id='burgerBtn' and contains(string(), 'Menu')]"
+        When I press "Menu"
+        Then I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Publication') and (@href='/dataset' or @href='/dataset/')]"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Organisations') and @href='/organization']"
+        And I should see an element with xpath "//li/a[contains(@class, 'active') and contains(string(), 'Gazettes') and @href='/gazettes-current']"
+        And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Contact') and @href='https://www.qld.gov.au/contact-us']"
+
     @unauthenticated
     Scenario: When I encounter a 'resource not found' error page, it has a custom message
         Given "Unauthenticated" as the persona
