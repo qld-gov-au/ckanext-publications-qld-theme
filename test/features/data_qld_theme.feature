@@ -77,14 +77,14 @@ Feature: Theme customisations
         And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Gazettes') and @href='/gazettes-current']"
         And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Contact') and @href='https://www.qld.gov.au/contact-us']"
 
-        When I press the element with xpath "//a[contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
+        When I press the element with xpath "//li/a[contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
         Then I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Publication') and (@href='/dataset' or @href='/dataset/')]"
         And I should see an element with xpath "//li/a[contains(@class, 'active') and contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
         And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Organisations') and @href='/organization']"
         And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Gazettes') and @href='/gazettes-current']"
         And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Contact') and @href='https://www.qld.gov.au/contact-us']"
 
-        When I press the element with xpath "//a[contains(string(), 'Organisations') and @href='/organization']"
+        When I press the element with xpath "//li/a[contains(string(), 'Organisations') and @href='/organization']"
         Then I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Publication') and (@href='/dataset' or @href='/dataset/')]"
         And I should see an element with xpath "//li/a[not(contains(@class, 'active')) and contains(string(), 'Standards') and @href='/dataset/publishing-standards-publications-qld-gov-au']"
         And I should see an element with xpath "//li/a[contains(@class, 'active') and contains(string(), 'Organisations') and @href='/organization']"
