@@ -61,6 +61,12 @@ def expand_height(context):
     context.browser.driver.set_window_rect(x=0, y=0, width=1366, height=3072)
 
 
+@when(u'I narrow the browser to mobile width')
+def narrow_width(context):
+    # Work around x=null bug in Selenium set_window_size
+    context.browser.driver.set_window_rect(x=0, y=0, width=900, height=3072)
+
+
 @when(u'I log in directly')
 def log_in_directly(context):
     """
