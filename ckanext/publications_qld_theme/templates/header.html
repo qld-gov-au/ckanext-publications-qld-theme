@@ -71,11 +71,6 @@
                               {% link_for _('Register'), named_route='user.register', class_='sub' %}
                             </span>
                           {% endif %}
-                          {% if h.is_datarequests_enabled() %}
-                            <span class="qld-header-link ms-16">
-                              <a href="{{ h.url_for('datarequest.index') }}">Request data</a>
-                            </span>
-                          {% endif %}
                         {% endblock %}
                       {% endif %}
                     {% endblock %}
