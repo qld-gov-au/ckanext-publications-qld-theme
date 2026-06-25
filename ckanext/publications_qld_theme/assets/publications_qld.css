@@ -1,5 +1,5 @@
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 a,
@@ -221,7 +221,7 @@ form#comment_form textarea {
 
 #comment_form label:after,
 .comment-container form label:after {
-  content: '';
+  content: "";
 }
 
 #comment_form .form-group,
@@ -424,12 +424,12 @@ div.account-masthead .account ul.list-unstyled li .btn-link:focus {
 .global-alert .header:before {
   display: block;
   position: absolute;
-  margin-top: -.3em;
+  margin-top: -0.3em;
   margin-left: -1.7em;
   width: 1em;
   height: 1em;
   text-align: center;
-  padding: .4em;
+  padding: 0.4em;
 }
 
 .global-alert h2 {
@@ -459,7 +459,7 @@ div.account-masthead .account ul.list-unstyled li .btn-link:focus {
 
 .global-alert .summary {
   padding-left: 1em;
-  border-left: 1px solid hsla(0, 0%, 100%, .67);
+  border-left: 1px solid hsla(0, 0%, 100%, 0.67);
 }
 
 .global-alert .header {
@@ -494,6 +494,10 @@ a.qld-header-link, a.nav-link, .qld-header-link a, .nav-link a {
 .navbar-collapse {
     margin-left: 0px;
 }
+a .fa::before, a .fa-solid::before, a .fa-stack::before, a .fa-brands::before {
+    /* Allow Font Awesome icons to have no underline on hover */
+    display: inline-block;
+}
 
 li.nav-item a span.badge {
   float: right;
@@ -502,15 +506,15 @@ li.nav-item a span.badge {
 
 /* The background watermark image for each environment */
 body > div.qg-training {
-  background: url('/assets/bg_training.png') left top repeat;
+  background: url("/assets/bg_training.png") left top repeat;
 }
 
 body > div.qg-dev {
-  background: url('/assets/bg_dev.png') left top repeat;
+  background: url("/assets/bg_dev.png") left top repeat;
 }
 
 body > div.qg-staging {
-  background: url('/assets/bg_staging.png') left top repeat;
+  background: url("/assets/bg_staging.png") left top repeat;
 }
 
 /* Overriding main.css to fix column not wrapping text in responsive tables */
@@ -527,9 +531,9 @@ body > div.qg-staging {
 
 /* DC-12485 - Override broken border right inherited from out of the box (desktops)  */
 @media (min-width: 768px) {
-    .wrapper:before {
-      border-right: 0px !important;
-    }
+  .wrapper:before {
+    border-right: 0px !important;
+  }
 }
 
 /* QOL-5852 - Override popular icon as its no longer needed */
@@ -546,6 +550,6 @@ body > div.qg-staging {
 
 /** @DC-13484 - Unclickable home tiles **/
 /** Too risky to change position value, TODO fix greater positions **/
-.wrapper:before  {
-    z-index: -999 !important;
+.wrapper:before {
+  z-index: -999 !important;
 }
