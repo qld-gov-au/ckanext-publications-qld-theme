@@ -503,6 +503,29 @@ a .fa::before, a .fa-solid::before, a .fa-stack::before, a .fa-brands::before {
     width: unset;
     min-width: 2rem;
 }
+nav.sort-content button {
+    /* Sort order buttons aren't laid out like form buttons */
+    padding: unset;
+    min-width: unset;
+    min-height: unset;
+    margin-right: 10px;
+    text-decoration: none;
+}
+#dropdownDownloadFormat {
+    /* This dropdown should be visually appended to the download button */
+    min-width: unset;
+    box-shadow: unset;
+}
+.btn.btn-remove-url {
+    /* 'Clear' buttons are inline and should not be sized like normal ones */
+    min-width: unset;
+    min-height: unset;
+}
+.alert-dismissible .btn-close {
+    /* Close buttons inside a dismissable alert aren't properly handled by QGDS yet */
+    height: 1rem;
+    top: 0px;
+}
 
 li.nav-item a span.badge {
   float: right;
