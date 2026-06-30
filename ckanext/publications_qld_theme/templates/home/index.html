@@ -30,33 +30,50 @@
 
     <div class="container">
         <div class="row wrapper"><article class="module"><div class="module-content">
-            <div class="tiles">
 
-                <div class="tiles__item tiles__item--bg-title">
-                    <div>
-                        <div id="home-standards" class="tiles__title">{{ _('Publication standards') }}</div>
-                        <div class="tiles__content">
-                            <p>Our <a href="/dataset/publishing-standards-publications-qld-gov-au">publication standards</a>—including accessibility and usability requirements, and metadata guidelines—are now publicly available. We should be following these standards. Let us know if we’re not.</p>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col">
+            <div class="row row-cols-1 g-4">
+                <div class="col">
+                    <div class="card card-default default  card-multi-action">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                {{ _('Publication standards') }}
+                            </h3>
+                            <div class="card-text">
+                                <p>Our <a href="/dataset/publishing-standards-publications-qld-gov-au">publication standards</a>—including accessibility and usability requirements, and metadata guidelines—are now publicly available. We should be following these standards. Let us know if we’re not.</p>
+                            </div>
                         </div>
-                        <div class="tiles__link">
-                            <a href="/dataset/publishing-standards-publications-qld-gov-au" title="More publication standards">Read more</a>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div id="home-web-address-changes" class="tiles__title">Queensland Government web address changes</div>
-                        <div class="tiles__content">
-                            <p>Due to department changes, some Queensland Government web addresses have been updated.</p>
-                        </div>
-                        <div class="tiles__link">
-                            <a href="/article/announcements/#web-address-changes" title="Read more about: Queensland Government web address changes">Read more</a>
+                        <div class="card-footer">
+                            <a class="qld-cta-link" href="/dataset/publishing-standards-publications-qld-gov-au" title="More publication standards">Read more<span class="icon" aria-hidden="true"></span></a>
                         </div>
                     </div>
                 </div>
+                <div class="col">
+                    <div class="card card-default default  card-multi-action">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                Queensland Government web address changes
+                            </h3>
+                            <div class="card-text">
+                                <p>Due to department changes, some Queensland Government web addresses have been updated.</p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a class="qld-cta-link" href="/article/announcements/#web-address-changes" title="Read more about: Queensland Government web address changes">Read more<span class="icon" aria-hidden="true"></span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <div class="tiles__item tiles__item--bg-title">
-                    <div id="home-gazettes" class="tiles__title">{{ _('Queensland Government Gazettes') }}</div>
-                    <div class="tiles__content">
+        <div class="col">
+            <div class="card card-default default  card-multi-action">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        {{ _('Queensland Government Gazettes') }}
+                    </h3>
+                    <div class="card-text">
                         <ul>
                           <li><a href="https://www.forgov.qld.gov.au/information-and-communication-technology/communication-and-publishing/website-and-digital-publishing/queensland-government-gazette/publish-in-the-gazette">Publish in the Gazettes</a></li>
                           {% for year in range(h.get_year(), 2015, -1) %}
@@ -64,15 +81,21 @@
                           {% endfor %}
                         </ul>
                     </div>
-                    <div class="tiles__link">
-                        <a href="/group" title="More gazettes">More&hellip;</a>
-                    </div>
                 </div>
+                <div class="card-footer">
+                    <a href="/group" title="More gazettes">More&hellip;</a>
+                </div>
+            </div>
+        </div>
 
-                {% if h.top_organisations() %}
-                <div class="tiles__item tiles__item--bg-title">
-                    <div class="tiles__title">Top publishers</div>
-                    <div class="tiles__content">
+        {% if h.top_organisations() %}
+        <div class="col">
+            <div class="card card-default default  card-multi-action">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        Top publishers
+                    </h3>
+                    <div class="card-text">
                         <ul>
                             <!-- noindex -->
                             {% for group, num_packages in h.top_organisations(limit=5) %}
@@ -83,15 +106,15 @@
                             <!-- endnoindex -->
                         </ul>
                     </div>
-                    <div class="tiles__link">
-                        <a title="Read more about: Top publishers" href="/organization">More&hellip;</a>
-                    </div>
                 </div>
-                {% endif %}
+                <div class="card-footer">
+                    <a title="Read more about: Top publishers" href="/organization">More&hellip;</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
-
-            </div><!-- .tiles -->
-
+    </div>
         </div></article></div>
     </div><!-- .container -->
 </div>
