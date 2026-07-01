@@ -12,20 +12,32 @@
 <div id="content" class={{ h.set_background_image_class()  }}>
    {{ self.flash() }}
     <h1 class="visuallyhidden">Queensland Government publications Homepage</h1>
-    <div class="hero-banner" style="background-image: url('/assets/bridge.jpg');">
-        <div class="hero-banner__inner container">
-            <div class="hero-banner__text-wrap">
-                <h1>Discover and use Queensland Government Publications</h1>
-            </div>
-            <div class="hero-banner__search">
-                <h2 class="hero-banner__search-title">Search over 1,850 publications and 11,735 resources</h2>
-                <form action="/dataset" method="get" autocomplete="off">
-                    <input type="text" name="q" placeholder="E.g Gazettes" aria-label="Search Publications" />
-                    <button type="submit"><span class="sr-only">Submit search</span></button>
-                </form>
+    <div class="qld-banner qld-banner-grid banner-advanced dark with-hero-image">
+        <div class="container-fluid">
+            <div class="banner-inner pt-0 pt-md-48 pt-lg-64">
+                <div class="banner-content">
+                    <h1 class="banner-title-wrap mt-md-0">Queensland Government Publications</h1>
+                    <div class="banner-abstract">Search over 1,850 publications and 11,735 resources.</div>
+
+                    <div class="banner-cta" role="group">
+                        <div class="cta-buttons">
+                            <form class="site-search w-100" action="/dataset" method="get" autocomplete="off">
+                                <div class="qld-search-input full-width">
+                                    <input class="form-control" type="text" name="q" aria-label="Search Publications">
+                                    <button class="btn btn-primary" type="submit">
+                                        <span class="btn-icon" aria-hidden="true"></span>
+                                        <span class="btn-label">Search</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-image align-right with-gradient">
+                    <div class="banner-image-inner" style="background-image: url('/assets/bridge.jpg');" role="img"></div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <div class="container">
