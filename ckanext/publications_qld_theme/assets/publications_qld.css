@@ -1,5 +1,5 @@
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 a,
@@ -45,31 +45,6 @@ a.btn {
 .btn:active,
 .btn.active {
   box-shadow: none;
-}
-
-/* Blue buttons */
-.btn-primary {
-  color: #fff;
-  background-color: #007eb1;
-  border-color: #007eb1;
-}
-
-.btn-primary:hover {
-  color: #fff;
-  background-color: #0090cb;
-  border-color: #0090cb;
-}
-
-.btn-primary:active,
-.btn-primary:active:hover,
-.btn-primary.active,
-.open > .dropdown-toggle.btn-primary,
-.btn-primary:focus,
-.btn-primary:active:focus,
-.btn-primary.focus {
-  color: #ffffff;
-  background-color: #545b62;
-  border-color: #4e555b;
 }
 
 /* Green buttons */
@@ -222,7 +197,7 @@ form#comment_form textarea {
 
 #comment_form label:after,
 .comment-container form label:after {
-  content: '';
+  content: "";
 }
 
 #comment_form .form-group,
@@ -425,12 +400,12 @@ div.account-masthead .account ul.list-unstyled li .btn-link:focus {
 .global-alert .header:before {
   display: block;
   position: absolute;
-  margin-top: -.3em;
+  margin-top: -0.3em;
   margin-left: -1.7em;
   width: 1em;
   height: 1em;
   text-align: center;
-  padding: .4em;
+  padding: 0.4em;
 }
 
 .global-alert h2 {
@@ -460,7 +435,7 @@ div.account-masthead .account ul.list-unstyled li .btn-link:focus {
 
 .global-alert .summary {
   padding-left: 1em;
-  border-left: 1px solid hsla(0, 0%, 100%, .67);
+  border-left: 1px solid hsla(0, 0%, 100%, 0.67);
 }
 
 .global-alert .header {
@@ -476,6 +451,196 @@ div.account-masthead .account ul.list-unstyled li .btn-link:focus {
   overflow: hidden;
 }
 
+/* Ensure nav items are laid out properly after QGDS */
+.nav-facet {
+    flex-direction: column;
+}
+.main-navbar .navigation {
+    display: flex;
+}
+.qld-header-link {
+    list-style-type: none;
+}
+.qld-header-link:hover, .qld-header-link a:hover {
+    color: var(--qld-link-color);
+}
+a.qld-header-link, a.nav-link, .qld-header-link a, .nav-link a {
+    text-decoration: none;
+}
+.navbar-collapse {
+    margin-left: 0px;
+}
+a .fa::before, a .fa-solid::before, a .fa-stack::before, a .fa-brands::before,
+button .fa::before, button .fa-solid::before, button .fa-stack::before, button .fa-brands::before {
+    /* Allow Font Awesome icons to have no underline on hover */
+    display: inline-block;
+}
+.pagination .page-item .page-link {
+    /* Handle page numbers above 2 digits */
+    width: unset;
+    min-width: 2rem;
+    padding: 0 0.7rem 0 0.7rem;
+}
+nav.sort-content button {
+    /* Sort order buttons aren't laid out like form buttons */
+    padding: unset;
+    min-width: unset;
+    min-height: unset;
+    margin-right: 10px;
+    text-decoration: none;
+}
+#dropdownDownloadFormat {
+    /* This dropdown should be visually appended to the download button */
+    min-width: unset;
+    box-shadow: unset;
+}
+.btn.btn-remove-url {
+    /* 'Clear' buttons are inline and should not be sized like normal ones */
+    min-width: unset;
+    min-height: unset;
+}
+.alert-dismissible .btn-close {
+    /* Close buttons inside a dismissable alert aren't properly handled by QGDS yet */
+    height: 1rem;
+    top: 0px;
+    right: 0px;
+}
+a.badge {
+    /* Don't turn white links purple when visited (white links imply a dark background) */
+    color: var(--qld-badge-color);
+    text-underline-offset: unset;
+}
+/* Apply breadcrumb styling to any 'li' inside the breadcrumb list,
+ * instead of requiring each one to have a 'breadcrumb-item' class,
+ * since many instances will be in templates controlled by plugins.
+ */
+.main {
+    /* Breadcrumbs above the 'main' div will handle padding */
+    padding-top: unset;
+}
+.breadcrumb li + .breadcrumb li {
+    padding-left: var(--qld-breadcrumb-item-padding-x)
+}
+.breadcrumb li + .breadcrumb li:before {
+    float: left;
+    padding-right: var(--qld-breadcrumb-item-padding-x);
+    color: var(--qld-breadcrumb-divider-color);
+    content: var(--qld-breadcrumb-divider, "/")
+}
+.breadcrumb li.active {
+    color: var(--qld-breadcrumb-item-active-color)
+}
+.breadcrumb li {
+    font-size: .875rem;
+    line-height: 2rem;
+    display: none;
+    white-space: nowrap
+}
+.breadcrumb li:not(:first-child) a {
+    margin-left: 5px
+}
+.breadcrumb li:nth-last-child(2) {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap
+}
+.breadcrumb li:nth-last-child(2):focus-within {
+    overflow: initial
+}
+.breadcrumb li:first-child {
+    flex-shrink: 0
+}
+.breadcrumb li a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+.breadcrumb li a:focus {
+    overflow: initial
+}
+.breadcrumb li:before {
+    display: none
+}
+.breadcrumb li:after {
+    content: "";
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    -webkit-mask-image: var(--qld-breadcrumb-divider);
+    mask-image: var(--qld-breadcrumb-divider);
+    -webkit-mask-size: 1rem 1rem;
+    mask-size: 1rem 1rem;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center center;
+    mask-position: center center;
+    background-color: var(--qld-breadcrumb-divider-color);
+    position: relative;
+    top: 4px
+}
+.breadcrumb li:last-child:after {
+    display: none
+}
+.breadcrumb li a, .breadcrumb li a:visited, .breadcrumb li a:hover {
+    color: var(--qld-breadcrumb-link-color);
+    text-decoration-color: var(--qld-breadcrumb-link-text-decoration-color)
+}
+.breadcrumb li a {
+    outline: 3px solid transparent;
+    outline-offset: -3px
+}
+.breadcrumb li a:focus {
+    outline-width: 3px;
+    outline-style: solid;
+    outline-color: var(--qld-focus-color, #002e85);
+    outline-offset: 3px
+}
+@media (max-width: 991.98px) {
+    .breadcrumb li {
+        max-width: unset
+    }
+
+    .breadcrumb li:nth-last-child(2) {
+        display: flex;
+        flex-direction: row-reverse;
+        min-width: 0
+    }
+
+    .breadcrumb li:nth-last-child(2):after {
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        margin-left: -.25rem;
+        top: 7px;
+        min-width: 1.5rem
+    }
+}
+@media (min-width: 992px) {
+    .breadcrumb li {
+        display: inline;
+        font-size: 1rem
+    }
+
+    .breadcrumb li.active {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        flex-shrink: 999999;
+        margin-left: 4px
+    }
+}
+@media print {
+    .breadcrumb a:after, .breadcrumb li a:after {
+        content: " >"
+    }
+
+    .breadcrumb li.breadcrumb-toggle {
+        display: none !important
+    }
+}
+
 li.nav-item a span.badge {
   float: right;
   margin-right: 10px;
@@ -483,15 +648,15 @@ li.nav-item a span.badge {
 
 /* The background watermark image for each environment */
 body > div.qg-training {
-  background: url('/assets/bg_training.png') left top repeat;
+  background: url("/assets/bg_training.png") left top repeat;
 }
 
 body > div.qg-dev {
-  background: url('/assets/bg_dev.png') left top repeat;
+  background: url("/assets/bg_dev.png") left top repeat;
 }
 
 body > div.qg-staging {
-  background: url('/assets/bg_staging.png') left top repeat;
+  background: url("/assets/bg_staging.png") left top repeat;
 }
 
 /* Overriding main.css to fix column not wrapping text in responsive tables */
@@ -508,9 +673,9 @@ body > div.qg-staging {
 
 /* DC-12485 - Override broken border right inherited from out of the box (desktops)  */
 @media (min-width: 768px) {
-    .wrapper:before {
-      border-right: 0px !important;
-    }
+  .wrapper:before {
+    border-right: 0px !important;
+  }
 }
 
 /* QOL-5852 - Override popular icon as its no longer needed */
@@ -527,6 +692,6 @@ body > div.qg-staging {
 
 /** @DC-13484 - Unclickable home tiles **/
 /** Too risky to change position value, TODO fix greater positions **/
-.wrapper:before  {
-    z-index: -999 !important;
+.wrapper:before {
+  z-index: -999 !important;
 }

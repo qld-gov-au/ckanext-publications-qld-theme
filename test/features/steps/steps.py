@@ -61,6 +61,12 @@ def expand_height(context):
     context.browser.driver.set_window_rect(x=0, y=0, width=1366, height=3072)
 
 
+@when(u'I narrow the browser to mobile width')
+def narrow_width(context):
+    # Work around x=null bug in Selenium set_window_size
+    context.browser.driver.set_window_rect(x=0, y=0, width=900, height=3072)
+
+
 @when(u'I log in directly')
 def log_in_directly(context):
     """
@@ -164,7 +170,7 @@ def confirm_dialog_if_present(context, text):
     if context.browser.is_element_present_by_xpath(dialog_xpath):
         parent_xpath = dialog_xpath
     elif context.browser.is_text_present(text):
-        parent_xpath = "//div[contains(string(), '{0}')]/..".format(text)
+        parent_xpath = "//div[contains(string(), '{0}')]".format(text)
     else:
         return
     button_xpath = parent_xpath + "//button[contains(@class, 'btn-primary')]"
@@ -185,7 +191,7 @@ def confirm_dataset_deletion_dialog_if_present(context):
         """)
     # Press the Confirm button whether it is in a dialog or a page
     context.execute_steps(u"""
-        When I press the element with xpath "//button[contains(@class, 'btn-primary') and contains(string(), 'Confirm') ]"
+        When I press the element with xpath "//div[@id='content']//button[contains(@class, 'btn-primary') and contains(string(), 'Confirm') ]"
         Then I should see "Dataset has been deleted"
     """)
 
@@ -615,6 +621,13 @@ def reload_page_every_n_until_find(context, xpath, seconds=5, reload_times=5):
             context.browser.reload()
 
     assert False, 'Element with xpath "{}" was not found'.format(xpath)
+
+
+@when(u'I submit the main form')
+def submit_form(context):
+    context.execute_steps("""
+        When I press the element with xpath "//div[@id='content']//button[contains(@class, 'btn-primary')]"
+    """)
 
 
 # ckanext-qgov
