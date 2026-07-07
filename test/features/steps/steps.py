@@ -200,6 +200,7 @@ def confirm_dataset_deletion_dialog_if_present(context):
 def go_to_new_resource_form(context, name):
     context.execute_steps(u"""
         When I go to dataset "{0}"
+        And I take a debugging screenshot
     """.format(name))
     if context.browser.is_element_present_by_xpath("//a[text() = 'Add new resource']"):
         context.execute_steps(u"""
