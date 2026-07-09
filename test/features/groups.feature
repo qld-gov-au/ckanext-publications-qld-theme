@@ -58,7 +58,7 @@ Feature: Group APIs
         When I select by text " $group_title" from "group_added"
         And I submit the main form
         Then I should see an element with xpath "//form//a[normalize-space() = '$group_title']"
-        When I press "$group_title"
+        When I go to dataset page
 
         Then I should see a search facet for "$group_title" truncated to "Group name more"
         When I press the search facet pointing to "$group_title"
