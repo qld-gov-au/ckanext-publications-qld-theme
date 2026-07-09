@@ -1,9 +1,9 @@
-behaving==3.2.1
+behaving==3.3.*
 Appium-Python-Client==2.10.1
-ckanapi==4.3
+ckanapi>=4.7
 ckantoolkit>=0.0.4
 factory-boy
-flake8==7.3.0
+flake8==7.3.*
 mock
 pytest-ckan
 requests>=2.32.0 # not directly required, pinned by Snyk to avoid a vulnerability
