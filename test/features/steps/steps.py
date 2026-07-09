@@ -203,6 +203,7 @@ def go_to_new_resource_form(context, name):
         And I take a debugging screenshot
     """.format(name))
     if context.browser.is_element_present_by_xpath("//a[text() = 'Add new resource']"):
+        # QGov fork of CKAN adds this button to the dataset page
         context.execute_steps(u"""
             When I press "Add new resource"
         """)
