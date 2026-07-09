@@ -59,6 +59,7 @@ Feature: Group APIs
         And I set "debug" to "True"
         And I take a debugging screenshot
         And I submit the main form
+        And I take a debugging screenshot
         Then I should see an element with xpath "//form//a[normalize-space() = '$group_title']"
         When I go to dataset page
 
