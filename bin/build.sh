@@ -23,7 +23,7 @@ SOLR_VERSION=9
 
 if [ "$CKAN_VERSION" = "2.12" ]; then
     CKAN_GIT_ORG=ckan
-    CKAN_GIT_VERSION=dev-v2.12
+    CKAN_GIT_VERSION=6a75534af2d50f506820e252c7f0c5d5c65a6b72
 elif [ "$CKAN_VERSION" = "2.11" ]; then
     CKAN_GIT_VERSION=ckan-2.11.5-qgov.2
 elif [ "$CKAN_VERSION" = "2.10" ]; then
