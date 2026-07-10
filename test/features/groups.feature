@@ -56,7 +56,6 @@ Feature: Group APIs
         When I create a dataset and resource with key-value parameters "notes=Testing long group name" and "name=Test"
         And I press "Groups"
         When I select by text " $group_title" from "group_added"
-        And I set "debug" to "True"
         And I take a debugging screenshot
         And I submit the main form
         And I take a debugging screenshot
@@ -68,7 +67,6 @@ Feature: Group APIs
         Then I should see "Data and Resources"
 
         When I go to dataset page
-        And I reload page every 2 seconds until I see an element with xpath "//li[contains(@class, 'nav-item')]//a[contains(string(), 'Group name more')]" but not more than 5 times
         Then I should see a search facet for "$group_title" truncated to "Group name more"
         When I press the search facet pointing to "$group_title"
         Then I should see an active search facet for "$group_title" truncated to "Group name more"
