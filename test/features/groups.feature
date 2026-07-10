@@ -61,6 +61,11 @@ Feature: Group APIs
         And I submit the main form
         And I take a debugging screenshot
         Then I should see an element with xpath "//form//a[normalize-space() = '$group_title']"
+        # Edit dataset to trigger an index rebuild
+        When I press the element with xpath "//a[contains(@href, '/dataset/edit/')]"
+        And I fill in "notes" with "Refreshing index for dataset in long group"
+        And I submit the main form
+        Then I should see "Data and Resources"
 
         When I go to dataset page
         And I reload page every 2 seconds until I see an element with xpath "//li[contains(@class, 'nav-item')]//a[contains(string(), 'Group name more')]" but not more than 5 times
