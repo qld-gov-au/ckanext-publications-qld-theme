@@ -4,7 +4,6 @@ Feature: Resource UI
     Scenario Outline: Link resource should create a link to its URL
         Given "SysAdmin" as the persona
         When I log in
-        And I set "debug" to "True"
         And I create a dataset and resource with key-value parameters "notes=Testing link '<name>'" and "name=<name>::url=<url>"
         And I press the element with xpath "//a[(contains(@title, '<name>') or contains(@aria-label, 'Navigate to resource: <name>')) and contains(string(), '<name>')]"
         Then I should see "<url>"
