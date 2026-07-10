@@ -154,7 +154,7 @@ def press_search_facet(context, title):
 def fill_in_field_if_present(context, name, value):
     context.execute_steps(u"""
         When I execute the script "field = $('#{0}'); if (!field.length) field = $('[name={0}]'); if (!field.length) field = $('#field-{0}'); field.val('{1}'); field.keyup();"
-    """.format(name, value))
+    """.format(name, value.replace("'", r"\'")))
 
 
 @when(u'I clear the URL field')
@@ -200,8 +200,10 @@ def confirm_dataset_deletion_dialog_if_present(context):
 def go_to_new_resource_form(context, name):
     context.execute_steps(u"""
         When I go to dataset "{0}"
+        And I take a debugging screenshot
     """.format(name))
     if context.browser.is_element_present_by_xpath("//a[text() = 'Add new resource']"):
+        # QGov fork of CKAN adds this button to the dataset page
         context.execute_steps(u"""
             When I press "Add new resource"
         """)

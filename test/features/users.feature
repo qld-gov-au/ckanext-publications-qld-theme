@@ -85,7 +85,7 @@ Feature: User APIs
         Given "<Persona>" as the persona
         When I log in
         And I go to the "admin" profile page
-        Then I should see an element with xpath "//h1[string() = 'Administrator']"
+        Then I should see an element with xpath "//h2[string() = 'Administrator']"
 
         Examples: Admins
             | Persona       |
@@ -97,7 +97,7 @@ Feature: User APIs
         Given "TestOrgMember" as the persona
         When I log in
         And I go to the "test_org_member" profile page
-        Then I should see an element with xpath "//h1[string() = 'Test Member']"
+        Then I should see an element with xpath "//h2[string() = 'Test Member']"
 
     Scenario: Non-self user profile page is not accessible to non-admins
         Given "TestOrgMember" as the persona
@@ -164,3 +164,21 @@ Feature: User APIs
         And I fill in "password2" with "password1234"
         And I press "Create Account"
         Then I should see "Password: Must contain at least one number, lowercase letter, capital letter, and symbol"
+
+    Scenario: As a sysadmin, when I go to the sysadmin list, I can promote and demote other sysadmins
+        Given "SysAdmin" as the persona
+        When I log in
+        And I click the link to a url that contains "/ckan-admin/"
+        And I take a debugging screenshot
+        Then I should see an element with xpath "//table//a[string() = 'Administrator' and @href = '/user/admin']"
+        And I should not see "Test Admin"
+
+        When I fill in "promote-username" with "test_org_admin"
+        And I press "Promote"
+        And I take a debugging screenshot
+        Then I should see "Promoted Test Admin to sysadmin"
+        And I should see an element with xpath "//table//a[string() = 'Test Admin' and @href = '/user/test_org_admin']"
+
+        When I press the element with xpath "//tr/td/a[@href = '/user/test_org_admin']/../following-sibling::td//button[contains(@title, 'Revoke') or contains(@data-bs-title, 'Revoke')]"
+        Then I should see "Revoked sysadmin permission from Test Admin"
+        And I should not see an element with xpath "//table//a[@href = '/user/test_org_admin']"
