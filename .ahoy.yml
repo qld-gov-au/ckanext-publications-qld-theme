@@ -77,7 +77,7 @@ commands:
     cmd: |
         ahoy title "Output logs"
         # Loop through each container and wrap with github log groups
-        services=$(bin/docker-compose.sh ps --services)
+        services=$(sh bin/docker-compose.sh ps --services)
         for service in $services; do
           echo "::group::$service"
           sh bin/docker-compose.sh logs "$service"
