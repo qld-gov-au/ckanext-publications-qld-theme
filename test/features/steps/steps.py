@@ -132,6 +132,7 @@ def request_reset(context):
 @then(u'I should see a search facet for "{title}" truncated to "{truncated_title}"')
 def truncated_facet_visible(context, title, truncated_title):
     context.execute_steps(u"""
+        When I reload page every 2 seconds until I see an element with xpath "//li[contains(@class, 'nav-item')]//a[contains(@title, '{title}') or contains(@data-bs-title, '{title}')]" but not more than 5 times
         Then I should see an element with xpath "//li[contains(@class, 'nav-item')]//a[contains(string(), '{truncated_title}') and contains(string(), '...') and (contains(@title, '{title}') or contains(@data-bs-title, '{title}'))]"
     """.format(title=title, truncated_title=truncated_title))
 
