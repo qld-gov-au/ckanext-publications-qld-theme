@@ -56,6 +56,7 @@ Feature: Group APIs
         When I create a dataset and resource with key-value parameters "notes=Testing long group name" and "name=Test"
         And I press "Groups"
         When I select by text " $group_title" from "group_added"
+        And I set "debug" to "True"
         And I take a debugging screenshot
         And I submit the main form
         And I take a debugging screenshot
