@@ -1,10 +1,10 @@
 #!/bin/sh
 
-set -e
+set -ex
 
-. ./.env
-export LAGOON_LOCALDEV_URL=http://$PROJECT.docker.amazee.io
 BASEDIR=$(dirname $0)
+. $BASEDIR/.env
+export LAGOON_LOCALDEV_URL=http://$PROJECT.docker.amazee.io
 
 # derive versions from CKAN version
 export CKAN_VERSION=${CKAN_VERSION:-2.11}
