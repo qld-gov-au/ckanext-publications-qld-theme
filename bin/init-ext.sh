@@ -42,7 +42,7 @@ install_requirements () {
 
 . "${APP_DIR}"/bin/activate
 install_requirements . dev-requirements requirements-dev
-for extension in . `ls -d $SRC_DIR/ckanext-*`; do
+for extension in . `ls -d $SRC_DIR/ckan $SRC_DIR/ckanext-*`; do
     TOOL=uv install_requirements $extension requirements pip-requirements
 done
 pip install -e .
