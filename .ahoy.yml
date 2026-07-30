@@ -3,11 +3,50 @@ ahoyapi: v2
 
 commands:
 
+  configure-docker:
+    usage: Generate Docker and Docker Compose configuration files.
+    cmd: |
+      export CKAN_VERSION=${CKAN_VERSION:-2.11}
+      ahoy title "Generating CKAN $CKAN_VERSION configuration for Docker Compose..."
+      # Remove lines containing '###'.
+      # Uncomment lines containing '##'.
+      sed -e "/###/d" docker-compose-template.yml | sed -e "s/##//" > docker-compose.yml
+      # Pull the latest images.
+      ahoy pull
+      PYTHON=python3
+      PYTHON_VERSION=py3
+      CKAN_GIT_VERSION=${CKAN_VERSION}
+      CKAN_GIT_ORG=qld-gov-au
+      SOLR_VERSION=9
+      if [ "$CKAN_VERSION" = "2.12" ]; then
+          CKAN_GIT_ORG=ckan
+          # Pin to a working version of 2.12
+          # TODO Update after https://github.com/ckan/ckan/issues/9417 is fixed
+          #CKAN_GIT_VERSION=6a75534af2d50f506820e252c7f0c5d5c65a6b72
+          CKAN_GIT_VERSION=dev-v2.12
+      elif [ "$CKAN_VERSION" = "2.11" ]; then
+          CKAN_GIT_VERSION=ckan-2.11.5-qgov.2
+      elif [ "$CKAN_VERSION" = "2.10" ]; then
+          CKAN_GIT_VERSION=ckan-2.10.7-qgov.2
+          SOLR_VERSION=8
+      elif [ "$CKAN_VERSION" = "master" ]; then
+          CKAN_GIT_ORG=ckan
+      fi
+      sed "s|{CKAN_VERSION}|$CKAN_VERSION|g" .docker/Dockerfile-template.ckan \
+          | sed "s|{CKAN_GIT_VERSION}|$CKAN_GIT_VERSION|g" \
+          | sed "s|{CKAN_GIT_ORG}|$CKAN_GIT_ORG|g" \
+          | sed "s|{PYTHON_VERSION}|$PYTHON_VERSION|g" \
+          | sed "s|{SOLR_VERSION}|$SOLR_VERSION|g" \
+          | sed "s|{PYTHON}|$PYTHON|g" \
+          > .docker/Dockerfile.ckan
+      export SOLR_VERSION
+
   # Docker commands.
   build:
     usage: Build or rebuild project.
     cmd: |
       ahoy title "Building project"
+      ahoy configure-docker
       ahoy pre-flight
       ahoy clean
       ahoy build-network
