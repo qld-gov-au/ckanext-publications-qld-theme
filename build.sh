@@ -218,7 +218,6 @@ run_bdd_tests () {
     cli "rm -f test/screenshots/*"
     start_mailmock
     sleep 5
-    run_bdd_tests
     JUNIT_OUTPUT="--junit --junit-directory=test/junit/"
     if [ "$BEHAVE_TAG" = "" ]; then
       _single_bdd_test_run "--tags=smoke" && _single_bdd_test_run "--tags=-smoke"
