@@ -52,7 +52,7 @@ jobs:
             && sudo mv /tmp/pygmy /usr/local/bin/pygmy
 
       - name: Build
-        run: bin/build.sh
+        run: ahoy build
         timeout-minutes: 15
         continue-on-error: ${{ matrix.experimental }}
 
