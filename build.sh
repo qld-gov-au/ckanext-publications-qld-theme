@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -e
 
 BASEDIR=$(dirname $0)
 . $BASEDIR/.env
@@ -268,6 +268,22 @@ pre_flight () {
 
 if [ $# -lt 1 ]; then
     build
+elif [ "$1" = "help" ] || [ "$1" = "--help" ]; then
+    line "Available commands:"
+    echo "build"
+    echo "clean"
+    echo "configure_docker"
+    echo "create_test_data"
+    echo "down"
+    echo "info"
+    echo "lint"
+    echo "logs"
+    echo "restart"
+    echo "start"
+    echo "stop"
+    echo "test_bdd"
+    echo "test_unit"
+    echo "up"
 else
     $@
 fi

@@ -38,7 +38,7 @@ Compatibility with core CKAN versions:
     sudo apt-get update
     sudo apt-get install docker-ce docker-ce-cli containerd.io
     ```
-    If you don't want sudo infront of docker [non-root user manage](https://docs.docker.com/install/linux/linux-postinstall/)
+    If you don't want sudo in front of Docker [non-root user manage](https://docs.docker.com/install/linux/linux-postinstall/)
     ```text
     sudo groupadd docker
     sudo usermod -aG docker $USER
@@ -54,22 +54,10 @@ Compatibility with core CKAN versions:
     ```
     sudo gem install pygmy
     ```
-  - [Ahoy](https://github.com/ahoy-cli/ahoy) [Docs](https://ahoy-cli.readthedocs.io/en/latest/)
-    ```
-    Linux
-    sudo wget https://github.com/devinci-code/ahoy/releases/download/2.0.0/ahoy-bin-linux-amd64 -O /usr/local/bin/ahoy && sudo chown $USER /usr/local/bin/ahoy && chmod +x /usr/local/bin/ahoy
-    ```
-    ```text
-    OSX
-    brew tap devinci-code/tap
-    brew install ahoy
-    # For v2 which is still alpha (see below)
-    brew install ahoy --HEAD
-    ```
 - Make sure that all local web development services are shut down (Apache/Nginx, Mysql, MAMP etc).
 - Checkout project repository (in one of the [supported Docker directories](https://docs.docker.com/docker-for-mac/osxfs/#access-control)).
 - `pygmy up`
-- `ahoy build`
+- `./build.sh`
 
 Use `admin`/`password` to login to CKAN.
 
@@ -150,27 +138,29 @@ always_direct allow localnet
 127.0.0.1 docker.amazee.io adminer.docker.amazee.io mailhog.docker.amazee.io ckanext-publications-qld-theme.docker.amazee.io
 ```
 
-## Available `ahoy` commands
-Run each command as `ahoy <command>`.
+## Available build commands
+Run each command as `./build.sh <command>`.
   ```
-   build        Build or rebuild project.
-   clean        Remove containers and all build files.
-   cli          Start a shell inside CLI container or run a command.
-   doctor       Find problems with current project setup.
-   down         Stop Docker containers and remove container, images, volumes and networks.
-   flush-redis  Flush Redis cache.
-   info         Print information about this project.
-   install-site Install a site.
-   lint         Lint code.
-   logs         Show Docker logs.
-   pull         Pull latest docker images.
-   reset        Reset environment: remove containers, all build, manually created and Drupal-Dev files.
-   restart      Restart all stopped and running Docker containers.
-   start        Start existing Docker containers.
-   stop         Stop running Docker containers.
-   test-bdd     Run BDD tests.
-   test-unit    Run unit tests.
-   up           Build and start Docker containers.
+   build                Build or rebuild project.
+   clean                Remove containers and all build files.
+   cli                  Start a shell inside CLI container or run a command.
+   configure_docker     Generate configuration files for Docker containers.
+   create_test_data     Add sample data to support scenario tests.
+   doctor               Find problems with current project setup.
+   down                 Stop Docker containers and remove container, images, volumes and networks.
+   flush_redis          Flush Redis cache.
+   info                 Print information about this project.
+   lint                 Lint code.
+   logs                 Show Docker logs.
+   pull                 Pull latest docker images.
+   reset                Reset environment: remove containers, all build, manually created and Drupal-Dev files.
+   restart              Restart all stopped and running Docker containers.
+   run_bdd_tests        Run BDD tests without creating test data (typically for re-runs).
+   start                Start existing Docker containers.
+   stop                 Stop running Docker containers.
+   test_bdd             Create test data and run BDD tests.
+   test_unit            Run unit tests.
+   up                   Build and start Docker containers.
   ```
 
 ## Coding standards
@@ -179,12 +169,12 @@ Python code linting uses [flake8](https://github.com/PyCQA/flake8) with configur
 Set `ALLOW_LINT_FAIL=1` in `.env` to allow lint failures.
 
 ## Nose tests
-`ahoy test-unit`
+`./build.sh test_unit`
 
 Set `ALLOW_UNIT_FAIL=1` in `.env` to allow unit test failures.
 
 ## Behavioral tests
-`ahoy test-bdd`
+`./build.sh test_bdd`
 
 Set `ALLOW_BDD_FAIL=1` in `.env` to allow BDD test failures.
 
