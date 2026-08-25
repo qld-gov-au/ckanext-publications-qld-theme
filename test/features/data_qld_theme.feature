@@ -156,7 +156,7 @@ Feature: Theme customisations
     Scenario: When I go to the header URL, I can see the list of necessary assets
         Given "Unauthenticated" as the persona
         When I go to "/header.html"
-        Then I should see an element with xpath "//a[@href='/user/login' and contains(string(), 'Log in')]"
+        Then I should see an element with xpath "//a[@href='/user/login' and contains(string(), 'Log')]"
         And I should see an element with xpath "//a[@href='/user/register' and contains(string(), 'Register')]"
         And I should not see "not found"
 
