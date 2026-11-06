@@ -62,7 +62,7 @@ include-package-data = true
 exclude = ["contrib*", "docs*", "tests*"]
 
 [tool.setuptools.package-data]
- "ckanext.publications_qld_theme" = ["assets/*", "public/*", "public/assets/*"]
+ "ckanext.publications_qld_theme" = ["assets/*", "public/*", "public/assets/*", "templates/*"]
 
 [tool.pytest.ini_options]
 addopts = "--ckan-ini test.ini"
