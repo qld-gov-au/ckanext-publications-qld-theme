@@ -1,10 +1,7 @@
 {% ckan_extends %}
 
-{% block header_wrapper %}
-    {% block header_debug %}
-      {{ super() }}
-    {% endblock %}
-    <header class="qld-header" role="banner">
+{# For usage inside CKAN as well as external where only the self.header_account() is given #}
+{% block header_account %}
     <div class="qld-header-pre-header dark">
         <div class="container">
             <div class="d-flex justify-content-between">
@@ -20,10 +17,9 @@
                 </span>
 
                 <div class="d-none d-lg-flex align-items-baseline">
-                  {% block header_account %}
                     {% block header_account_container_content %}
                       {% if g.userobj %}
-                        {% block header_account_logged %} {% if g.userobj.sysadmin %}
+                        {% block header_account_logged %} {% if g.userobj and g.userobj.sysadmin %}
                         <span class="ms-16">CKAN {{ h.ckan_version() }}</span>
                         <span class="qld-header-link ms-16">
                             <a href="{{ h.url_for('admin.index') }}" title="{{ _('Sysadmin settings') }}">
@@ -74,7 +70,6 @@
                         {% endblock %}
                       {% endif %}
                     {% endblock %}
-                  {% endblock %}
                 </div>
 
                 <div class="qld-header-mobile-controls">
@@ -90,6 +85,66 @@
 
         </div>
     </div>
+{% endblock %}
+
+{% block mobile_account %}
+  {% if g.userobj %}
+    {% if g.userobj.sysadmin %}
+    <li class="nav-item alt mobile-only">
+        <a class="nav-link" href="{{ h.url_for('admin.index') }}" title="{{ _('Sysadmin settings') }}">
+            <i class="fa fa-gavel" aria-hidden="true"></i>
+            <span class="text">{{ _('Admin') }}</span>
+        </a>
+    </li>
+    {% endif %}
+    <li class="nav-item alt mobile-only">
+        <a class="nav-link image" href="{{ h.url_for('user.read', id=g.userobj.name) }}" title="{{ _('View profile') }}">
+            {{ h.gravatar((g.userobj.email_hash if g and g.userobj else ''), size=22) }}
+            <span class="username">{{ g.userobj.display_name }}</span>
+        </a>
+    </li>
+    {% set new_activities = h.new_activities() %}
+    <li class="nav-item alt mobile-only notifications {% if new_activities > 0 %}notifications-important{% endif %}">
+        {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', new_activities) %}
+        <a class="nav-link {% if h.current_url().startswith('/dashboard') %}active" aria-current="page{% endif %}" href="{{ h.url_for(h.dashboard_index_route()) }}" title="{{ notifications_tooltip }}">
+            <i class="fa fa-tachometer" aria-hidden="true"></i>
+            <span class="text">{{ _('Dashboard') }}</span>
+            <span class="badge">{{ new_activities }}</span>
+        </a>
+    </li>
+    <li class="nav-item alt mobile-only">
+      <a class="nav-link" href="{{ h.url_for('user.edit', id=c.userobj.name) }}" title="{{ _('Profile settings') }}">
+        <i class="fa fa-cog" aria-hidden="true"></i>
+        <span class="text">{{ _('Profile settings') }}</span>
+      </a>
+    </li>
+    <li class="nav-item alt mobile-only">
+      <form action="{{ h.url_for('user.logout') }}" method="post">
+        {{ h.csrf_input() if 'csrf_input' in h }}
+        <button class="btn btn-sm alt mobile-only" type="submit" title="{{ _('Log out') }}">
+          <i class="fa fa-sign-out" aria-hidden="true"></i>{{ _('Log out') }}
+        </button>
+      </form>
+    </li>
+  {% else %}
+    <li class="nav-item alt mobile-only">
+      {% link_for _('Log in'), named_route='user.login', class_="nav-link" %}
+    </li>
+    {% if h.check_access('user_create') %}
+      <li class="nav-item alt mobile-only">
+        {% link_for _('Register'), named_route='user.register', class_='nav-link sub' %}
+      </li>
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block header_wrapper %}
+{% if is_included %}
+    {% block header_debug %}
+      {{ super() }}
+    {% endblock %}
+    <header class="qld-header is-sub-brand" role="banner">
+    {{ self.header_account() }}
 
     <div class="qld-header-main default">
         <div class="container">
@@ -105,7 +160,7 @@
                             </div>
                             <div class="qld-header-secondary-content">
                                 <span class="qld-header-site-title">
-                                    Publications
+                                    {{ h.portal_application() }}
                                 </span>
                             </div>
                         </a>
@@ -142,7 +197,7 @@
 <nav id="main-nav" class="navbar navbar-expand-lg" aria-label="Website navigation" role="navigation">
     <div id="navbarNav" class="container">
             <div class="nav-header">
-                <span class="navbar-brand" href="#">Publications</span>
+                <span class="navbar-brand" href="#">{{ h.portal_application() }}</span>
                 <button id="burgerCloseBtn" type="button" class="navbar-btn" data-bs-toggle="collapse"
                     aria-label="Close" data-bs-target="#main-nav" aria-expanded="false"
                     aria-controls="collapseExample">Close</button>
@@ -187,57 +242,19 @@
                             </li>
                         {% endblock %}
                     {% endblock %}
-                          {% if g.userobj %}
-                            {% if g.userobj.sysadmin %}
-                            <li class="nav-item alt mobile-only">
-                                <a class="nav-link" href="{{ h.url_for('admin.index') }}" title="{{ _('Sysadmin settings') }}">
-                                    <i class="fa fa-gavel" aria-hidden="true"></i>
-                                    <span class="text">{{ _('Admin') }}</span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            <li class="nav-item alt mobile-only">
-                                <a class="nav-link" href="{{ h.url_for('user.read', id=g.userobj.name) }}" class="image" title="{{ _('View profile') }}">
-                                    {{ h.gravatar((g.userobj.email_hash if g and g.userobj else ''), size=22) }}
-                                    <span class="username">{{ g.userobj.display_name }}</span>
-                                </a>
-                            </li>
-                            {% set new_activities = h.new_activities() %}
-                            <li class="nav-item alt mobile-only notifications {% if new_activities > 0 %}notifications-important{% endif %}">
-                                {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', new_activities) %}
-                                <a class="nav-link {% if h.current_url().startswith('/dashboard') %}active" aria-current="page{% endif %}" href="{{ h.url_for(h.dashboard_index_route()) }}" title="{{ notifications_tooltip }}">
-                                    <i class="fa fa-tachometer" aria-hidden="true"></i>
-                                    <span class="text">{{ _('Dashboard') }}</span>
-                                    <span class="badge">{{ new_activities }}</span>
-                                </a>
-                            </li>
-                            <li class="nav-item alt mobile-only">
-                              <a class="nav-link" href="{{ h.url_for('user.edit', id=c.userobj.name) }}" title="{{ _('Profile settings') }}">
-                                <i class="fa fa-cog" aria-hidden="true"></i>
-                                <span class="text">{{ _('Profile settings') }}</span>
-                              </a>
-                            </li>
-                            <li class="nav-item alt mobile-only">
-                              <form action="{{ h.url_for('user.logout') }}" method="post">
-                                {{ h.csrf_input() if 'csrf_input' in h }}
-                                <button class="btn btn-sm alt mobile-only" type="submit" title="{{ _('Log out') }}">
-                                  <i class="fa fa-sign-out" aria-hidden="true"></i>{{ _('Log out') }}
-                                </button>
-                              </form>
-                            </li>
-                          {% else %}
-                              <li class="nav-item alt mobile-only">
-                                {% link_for _('Log in'), named_route='user.login', class_="nav-link" %}
-                              </li>
-                              {% if h.check_access('user_create') %}
-                                <li class="nav-item alt mobile-only">
-                                  {% link_for _('Register'), named_route='user.register', class_='nav-link sub' %}
-                                </li>
-                              {% endif %}
-                          {% endif %}
+                    {{ self.mobile_account() }}
                 </ul>
             </div>
         </div>
         <div id="overlay"></div>
 </nav>
+{% else %}
+{# Direct load, assume this is coming from Squiz #}
+<div>
+    {{ self.header_account() }}
+</div>
+<ul class="navbar-nav">
+    {{ self.mobile_account() }}
+</ul>
+{% endif %}
 {% endblock %}

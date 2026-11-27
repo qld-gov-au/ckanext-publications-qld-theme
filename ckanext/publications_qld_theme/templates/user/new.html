@@ -1,15 +1,8 @@
 {% ckan_extends %}
 
-{% block primary_content %}
-  <article class="module">
-    <div class="module-content">
-      {% block primary_content_inner %}
-      <h1 class="page-heading">
-        {% block page_heading %}{{ _('Register with the Publications Portal') }}{% endblock %}
-      </h1>
-      <p>Register to follow datasets and receive notifications of updates. Your 'Displayed name' will be publicly visible.</p>
-      {{ form | safe }}
-      {% endblock %}
-    </div>
-  </article>
+{% block help_inner %}
+  <h2 class="module-heading">{{ _('Why Sign Up?') }}</h2>
+  <div class="module-content">
+    <p>{% trans %}Register to follow datasets and receive notifications of updates. Your 'Displayed name' will be publicly visible.{% endtrans %}</p>
+  </div>
 {% endblock %}

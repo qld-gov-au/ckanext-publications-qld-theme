@@ -98,6 +98,10 @@ def is_prod():
         return True
 
 
+def portal_application():
+    return 'Publications'
+
+
 def set_background_image_class():
     environment = config.get('ckan.site_url', '')
     if 'training' in environment:
@@ -163,6 +167,7 @@ class PublicationsQldThemePlugin(plugins.SingletonPlugin):
             'set_background_image_class': set_background_image_class,
             'set_external_resources': set_external_resources,
             'is_prod': is_prod,
+            'portal_application': portal_application,
             'comment_notification_recipients_enabled':
                 get_comment_notification_recipients_enabled,
             'unreplied_comments_x_days': unreplied_comments_x_days,

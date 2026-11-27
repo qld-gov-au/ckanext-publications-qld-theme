@@ -58,13 +58,13 @@ def log_in(context):
 @when(u'I expand the browser height')
 def expand_height(context):
     # Work around x=null bug in Selenium set_window_size
-    context.browser.driver.set_window_rect(x=0, y=0, width=1366, height=3072)
+    context.browser.driver.set_window_rect(x=0, y=0, width=1366, height=4096)
 
 
 @when(u'I narrow the browser to mobile width')
 def narrow_width(context):
     # Work around x=null bug in Selenium set_window_size
-    context.browser.driver.set_window_rect(x=0, y=0, width=900, height=3072)
+    context.browser.driver.set_window_rect(x=0, y=0, width=900, height=4096)
 
 
 @when(u'I log in directly')
@@ -96,6 +96,7 @@ def attempt_login(context, password):
 @then(u'I should see the login form')
 def login_link_visible(context):
     context.execute_steps(u"""
+        When I expand the browser height
         Then I should see an element with xpath "//h1[contains(string(), 'Log')]"
     """)
 
@@ -204,10 +205,10 @@ def go_to_new_resource_form(context, name):
         When I go to dataset "{0}"
         And I take a debugging screenshot
     """.format(name))
-    if context.browser.is_element_present_by_xpath("//a[text() = 'Add new resource']"):
+    if context.browser.is_element_present_by_xpath("//a[string() = 'Add new resource' or string() = 'Add New Resource']"):
         # QGov fork of CKAN adds this button to the dataset page
         context.execute_steps(u"""
-            When I press "Add new resource"
+            When I press the element with xpath "//a[contains(string(), 'Add new resource') or contains(string(), 'Add New Resource')]"
         """)
         return
 
@@ -219,10 +220,10 @@ def go_to_new_resource_form(context, name):
         context.execute_steps(u"""
             When I press "Next:"
         """)
-    elif context.browser.is_element_present_by_xpath("//*[contains(string(), 'Add new resource')]"):
+    elif context.browser.is_element_present_by_xpath("//*[contains(string(), 'Add new resource') or contains(string(), 'Add New Resource')]"):
         # Existing dataset, browse to the resource form
         context.execute_steps(u"""
-            When I press "Add new resource"
+            When I press the element with xpath "//a[contains(string(), 'Add new resource') or contains(string(), 'Add New Resource')]"
         """)
     else:
         # Existing dataset, browse to the resource form
@@ -232,7 +233,7 @@ def go_to_new_resource_form(context, name):
                 When I press "Resources"
             """)
         context.execute_steps(u"""
-            When I press "Add new resource"
+            When I press the element with xpath "//a[contains(string(), 'Add new resource') or contains(string(), 'Add New Resource')]"
             And I take a debugging screenshot
         """)
 
