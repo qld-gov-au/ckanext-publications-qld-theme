@@ -14,6 +14,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     {{ super() }}
 {% endblock %}
 
+{%- block header %}
+    {% snippet "header.html", is_included=true %}
+{% endblock -%}
+
+{% block maintag %}
+    <div role="main" class="main {{ h.set_background_image_class() }}">
+{% endblock %}
+
 {% block toolbar %}
   {# Drop the 'toolbar' class as that interferes with QGDS #}
   <div role="navigation" aria-label="{{ _('Breadcrumb') }}">
@@ -23,16 +31,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </div>
 {% endblock %}
 
-{% block maintag %}<div role="main" class="main {{ h.set_background_image_class() }}">{% endblock %}
-
 {% block secondary %}
-    <aside class="secondary col-sm-5 col-md-4 col-lg-4">
-        {% block secondary_content %}{% endblock %}
+    <aside class="secondary col-sm-12 col-md-4 col-lg-4">
+        {% block secondary_content %}
+            {{ super() }}
+        {% endblock %}
     </aside>
 {% endblock %}
 
 {% block primary %}
-    <div class="primary col-xs-12 col-sm-7 col-md-8 col-lg-8">
+    <div class="primary col-xs-12 col-sm-12 col-md-8 col-lg-8">
         {% block primary_content %}
             {{ super() }}
         {% endblock %}

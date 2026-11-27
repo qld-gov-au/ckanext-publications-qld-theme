@@ -1,0 +1,7 @@
+{% ckan_extends %}
+
+{% block page_pagination %}
+  <div hx-boost="true">
+    {{ page.pager(q=q, symbol_previous='Previous', symbol_next='Next') }}
+  </div>
+{% endblock %}
